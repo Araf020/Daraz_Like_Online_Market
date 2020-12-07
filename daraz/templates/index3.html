@@ -51,7 +51,7 @@
 
 				{% for cat in request.session.cats %}
 				<a style="background-color: #d4edda" href="/home/{{cat.id}}"
-                   class="list-group-item list-group-item-action"><h6 style="color: #0b2e13">{{cat.name}}</h6></a>
+                   class="list-group-item list-group-item-action"><h6 style="color: #0b2e13;font-family: 'Arial Black'">{{cat.name}}</h6></a>
 				{% endfor %}
 			</div>
 		</div>
@@ -66,9 +66,9 @@
                     <img class="card-img-top" src="{% static product.photo %}"  alt="Card image cap">
 
                     <div class="card-body">
-						<p class="card-title">{{product.name}}</p>
-                        <p class="card-title">Discount: {{product.discount}}%</p>
-						<p class="card-text"><b>{{product.price|currency}}</b></p>
+						<p style="color: #0b2e13" class="card-title">{{product.name}}</p>
+                        <p style="color: #ff5722" class="card-title">Discount: {{product.discount}}%</p>
+						<p style="color: #0b2e13" class="card-text"><b style="font-family: 'Times New Roman'">{{product.price|currency}}</b></p>
 {#						<p class="card-text"><b>{{product.desc}}</b></p>#}
 {#						<!-- {{product | is_in_cart:request.session.cart }} -->#}
 					</div>

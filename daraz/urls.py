@@ -37,7 +37,8 @@ urlpatterns = [
     # path('home/order/',views.order, name = 'order'),
     path('home/cart/',views.cart,name = 'cart'),
 
-    path('home/creditpay/',checkout.credit_check, name= 'checkout'),
+    path('home/pay_card/',checkout.credit_check, name= 'checkout'),
+    # path('home/creditpay/',checkout.credit_check, name= 'checkout'),
     # path('home/place_your_order',views.products),
     path('home/shipment/',checkout.shipment),
     path('home/profile/accountsettings/',views.accountsettings),
@@ -45,5 +46,11 @@ urlpatterns = [
     path('home/track/',views.trackYourorder,name='track'),
     path('home/payment/',views.paymentChoice, name='payment_choice'),
     path('test/',views.test),
+    path('home/pay_bkash/',checkout.bkash_check, name = 'bkash'),
+    path('home/verify_bkash/',checkout.verify_bkash, name = 'v_b'),
+    path('home/confirm_bkash_pay/',checkout.verify_pin, name = 'v_p'),
+    # path('home/pay_card/',checkout.credit_check, name = 'credit'),
+    path('home/place_your_order/',checkout.place_your_order , name = 'order_place'),
+    path('home/order_confirmation/',checkout.order_confirmation, name = 'order_confirmation')
 
 ]

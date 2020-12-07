@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+{% load cart %}
+{% load custom_filter %}
+
+
+<div class="container-fluid mt-3">
+	<div class="row">
+
+
+		<!-- filter -->
+
+
+
+		<div class="col-lg-2 mx-auto">
+			<div class="list-group">
+
+                <button style="background-color: #2abbe8" class="btn btn-white dropdown-toggle" type="button" data-toggle="dropdown"><h4 style="color: #0b2e13">Catagories</h4></button>
+
+				{% for cat in request.session.cats %}
+				<a style="background-color: #d4edda" href="/home/{{cat.id}}"
+                   class="list-group-item list-group-item-action"><h6 style="color: #0b2e13">{{cat.name}}</h6></a>
+				{% endfor %}
+			</div>
+		</div>
+
+		<!-- all products -->
+		<br>
+		<br>
+		<div class="col-lg-9 mx-auto">
+			<div class="container" style="background-color: #e83e8c; width: 500px">
+                <form action="" method="POST">
+            {% csrf_token %}
+
+{#    {% if request.session.acc %}#}
+{#        <h1>bal</h1>#}
+{#        <form method="POST">#}
+{#        {% csrf_token %}#}
+{#    <label for="vc">Verification Code</label>#}
+{#    <br>#}
+{#    <input type="number" id="vc" name="vc" placeholder="Enter the code we sent you">#}
+{#        <input type="submit" value="Submit" class="btn1">#}
+{#     {% elif request.session.verified %}#}
+{#         <form method="POST">#}
+{#         {% csrf_token %}#}
+{#    <label for="pin">Verification Code</label>#}
+{#    <br>#}
+{#    <input type="number" id="pin" name="pin" placeholder="Enter Your pin">#}
+{#     {% else %}#}
+        <label style="color: #0b2e13; font-family: 'Arial Black'" for="accno">Bkash Account Number</label>
+    <br>
+    <input type="text" id="accno" name="accno" placeholder="017xxxxxxxx">
+
+                    <br>
+{#                   {% endif %}#}
+                    <button  style="background-color:#404040;border-color: #0b2e13" type="submit" class="btn1">Submit</button>
+{#                    <a style="color: #0b2e13;" href="/home/verify_bkash">#}
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,291 @@
+{% extends 'base.html' %}
+{% load cart %}
+{% load custom_filter %}
+{% load static %}
+{% block content %}
+
+
+
+<nav class="one-edge-shadow
+
+  navbar-expand-lg
+   navbar-light bg-white">
+<div class="container-fluid mt-3">
+{#<section  class="toppbar ">#}
+{#			<div class="miid">#}
+{#				<div class="midright">#}
+{#					<div class="midright_mid">#}
+{##}
+{#				       <form class="example" action="" method="POST">#}
+{#                           {% csrf_token %}#}
+{#				         <input type="text" placeholder="Search in daraz" name="search">#}
+{#				         <button type="submit"><i class="fa fa-search"></i></button>#}
+{#				       </form>#}
+{##}
+{##}
+{#			        </div>#}
+{##}
+{#			    </div>#}
+{##}
+{##}
+{#			</div>#}
+{##}
+{# 	</section>#}
+</div>
+</nav>
+<br>
+<br>
+<div class="lzd-playground mt-3">
+
+
+
+		<!-- filter -->
+
+
+
+		<div class="col-lg-2 mx-auto pull-left">
+			<div class="list-group">
+
+                <button style="background-color: #2abbe8" class="btn btn-white dropdown-toggle" type="button" data-toggle="dropdown"><h4 style="color: #0b2e13">Catagories</h4></button>
+
+				{% for cat in request.session.cats %}
+				<a style="background-color: #d4edda" href="/home/{{cat.id}}"
+                   class="list-group-item list-group-item-action"><h6 style="color: #0b2e13">{{cat.name}}</h6></a>
+				{% endfor %}
+			</div>
+		</div>
+
+<div class="row">
+<div class="">
+<div class="">
+    <div class="">
+        <div class=""></div>
+        <div id="container" class=""><div><div class="root">
+
+{#            <div id="container_10008" class="" style="margin-top: 12px;">#}
+{#                <div id="leftContainer_10009" class="" style="width: 1000px;height: 800px; float: left;">#}
+{#                    <div id="listHeader_1" class="list-header">#}
+{#                        <span class="list-header-left">1 items</span>#}
+{#                        <span class="list-header-middle ">PRICE</span>#}
+{#                        <span class="list-header-right pull-right">QUANTITY</span>#}
+{#                    </div>#}
+{##}
+{#                    <div class="package">#}
+{#                        <div class=""><div class="package-title-left">#}
+{#                            <span class="package-title-name">Package  1 of 1</span>#}
+{#                        </div>#}
+{#                            <div class="package-title-right">#}
+{#                                <span class="package-title-tips">Shipping by <h4 style="font-family: 'Rage Italic';font-size:20px;color: #0b2e13">Pathao</h4> </span>#}
+{#                                <span class="package-title-brand" style="font-family: 'Arial Black'">{{product.shop }}</span>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <div class="delivery-option">#}
+{#                            <div>#}
+{#                                <div class="delivery-option-body">#}
+{#                                    <div class="delivery-slider">#}
+{#                                        <p class="delivery-slider-title">Delivery Option</p>#}
+{#                                        <div class="delivery-slider-wrap without-arrow">#}
+{#                                            <div class="next-slick next-slick-outer next-slick-horizontal">#}
+{#                                                <div draggable="false" class="next-slick-inner next-slick-initialized">#}
+{#                                                    <div class="next-slick-list">#}
+{#                                                        <div class="next-slick-track" style="opacity: 1; width: 1782.65px; transform: translate3d(0px, 0px, 0px);">#}
+{#                                                            <div class="next-slick-slide next-slick-active delivery-item" data-index="0" tabindex="-1" style="outline: none; width: 254.664px;">#}
+{#                                                                <div class="delivery-item-inner delivery-item-selected">#}
+{#                                                                    <div class="delivery-item-top">#}
+{#                                                                        <div class="delivery-item-content">#}
+{#                                                                            <div class="delivery-item-first-line">#}
+{#                                                                                <span class="lazada lazada-ic-sucess lazada-icon delivery-item-icon delivery-item-selected-icon">#}
+{##}
+{#                                                                                </span>#}
+{#                                                                                <div class="delivery-item-price"><span class="delivery-item-current-price">৳ 65</span>#}
+{#                                                                                    <span class="delivery-item-origin-price"></span>#}
+{#                                                                                </div>#}
+{#                                                                            </div>#}
+{#                                                                            <p class="delivery-item-name-wrap"><span class="delivery-item-name">Home Delivery</span>#}
+{#                                                                            </p>#}
+{#                                                                        </div>#}
+{#                                                                    </div>#}
+{#                                                                    <div class="delivery-item-bottom delivery-item-bottom-no-schedule-selected-nlu" data-spm="confirm"><p class="delivery-item-time">Est. Arrival: 7-10 Dec</p>#}
+{#                                                                    </div>#}
+{#                                                                </div>#}
+{#                                                            </div>#}
+{#                                                        </div>#}
+{#                                                    </div>#}
+{#                                                </div>#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        {% for product in products %}#}
+{#                        <div style="padding-left: 10px; padding-right: 10px;">#}
+{#                            <div id="item_98deb08127915f78ebd73dfdbbca2ab1" class="cart-item">#}
+{#                                <div class="cart-item-inner">#}
+{#                                    <div class="cart-item-left">#}
+{#                                        <div class="img-wrap">#}
+{#                                            <a href="#" class="automation-link-from-image-to-prod">#}
+{#                                                <img class="img" src="{% static product.product_img %}" alt="item"></a>#}
+{#                                        </div>#}
+{#                                        <div class="content">#}
+{#                                            <a  href="#" class="automation-link-from-title-to-prod title">#}
+{#                                                {{ product.name}}</a>#}
+{#                                            <a  href="#" class="automation-link-from-sub-title-to-prod sku">#}
+{#                                                {{product.shop}}</a>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                    <div class="cart-item-middle">#}
+{#                                        <p class="current-price">{{product.price |currency}}</p>#}
+{#                                        <p class="origin-price">৳ 650</p>#}
+{#                                        <p class="promotion-ratio">-31%</p>#}
+{#                                        <div class="operations">#}
+{#                                            <span class="automation-btn-delete">#}
+{#                                                <span class="lazada lazada-ic-Delete lazada-icon icon delete">#}
+{##}
+{#                                                </span>#}
+{#                                            </span>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                    <div class="cart-item-right">#}
+{#                                        <div class="quantity automation-item-quantity">#}
+{#                                            <span class="item-quantity-prefix">Qty: </span>#}
+{#                                            <span class="item-quantity-value">{{ product.quantity }}</span>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        {% endfor %}#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div id="rightContainer_10010" class="container pull-right" style="width: 388px; float: right;">#}
+{##}
+{#                    <div id="toPayBtn_10021" class="to-pay-btn clearfix">#}
+{#                        <button href="/home/payment" type="button" style="background-color: #ff5722" class="btn1">#}
+{#                            <a style="color: #0b2e13" href="/home/payment">Proceed to Pay</a></button></div><div class="checkout-address">#}
+{#                    <div class="checkout-address-inner ">#}
+{#                        <div>#}
+{#                            <p class="address-hat">Shipping &amp; Billing</p>#}
+{#                            <div class="address-title-container">#}
+{#                                <span class="lazada lazada-ic-checkout-address lazada-icon address-icon">#}
+{##}
+{#                                </span><span class="address-title">{{ request.session.name }}</span>#}
+{#                    <a href="###" class="address-edit automation-address-edit">EDIT</a>#}
+{#                </div>#}
+{#                </div>#}
+{#                    <div class="address-info-item address-value">#}
+{#                        <span class="address-tag-label" style="background-image: linear-gradient(-143deg, rgb(255, 123, 83) 0%, rgb(255, 75, 40) 100%);">HOME</span>#}
+{#                        <span>Polashi,buet campus,Azimpur,Dhaka, Azimpur, Dhaka - South, Dhaka</span>#}
+{#                    </div>#}
+{#                        <div class="checkout-address-cp">#}
+{#                            <div class="checkout-address-cp-view">#}
+{#                                <div class="checkout-address-cp-header">#}
+{#                                    <div class="checkout-address-cp-text">Free delivery on collecting your order from Daraz Pick-up Point</div>#}
+{#                                    <span class="lazada lazada-arrow lazada-icon checkout-address-cp-icon">#}
+{##}
+{#                                    </span>#}
+{#                                </div>#}
+{#                                <div class="checkout-address-cp-footer">#}
+{#                                    <div class="checkout-address-cp-text-sug">12 suggested collection point(s) nearby#}
+{#                                    </div>#}
+{#                                    <div>#}
+{#                                        <span class="lazada lazada-toolpit lazada-icon checkout-address-cp-icon">#}
+{##}
+{#                                        </span>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                    <div class="checkout-simple-address">#}
+{#                        <div class="checkout-simple-address-inner">#}
+{#                            <span class="lazada lazada-ic-checkout-bill lazada-icon address-icon"></span>#}
+{#                            <span class="checkout-simple-address-title">Bill to the same address</span>#}
+{#                            <a href="###" class="address-edit automation-address-edit">EDIT</a>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div id="textEdit_11002" class="input-field-label">#}
+{#                        <div class="input-field-label-inner clearfix">#}
+{#                            <div class="input-field-item-wrapper">#}
+{#                                <div class="input-field-item">#}
+{#                                    <span class="lazada lazada-ic-checkout-phone lazada-icon address-icon"></span>#}
+{#                                    <span class="input-field-item-value">017xxxxxxxx</span>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                            <a href="#" class="input-field-edit">EDIT</a>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div id="textEdit_11001" class="input-field-label">#}
+{#                        <div class="input-field-label-inner clearfix">#}
+{#                            <div class="input-field-item-wrapper">#}
+{#                                <div class="input-field-item">#}
+{#                                    <span class="lazada lazada-ic-checkout-email lazada-icon address-icon"></span>#}
+{#                                    <span class="input-field-item-value">{{ request.session.email}}</span>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                            <a href="#" class="input-field-edit">EDIT</a>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="summary-section">#}
+{#                        <div class="summary-section-heading">Order Summary#}
+{#                        </div>#}
+{#                        <div class="summary-section-content">#}
+{#                            <div class="  checkout-summary">#}
+{#                                <div class="checkout-summary-rows">#}
+{#                                    <div class="checkout-summary-row">#}
+{#                                        <div class="checkout-summary-main">#}
+{#                                            <div style="font-family: 'Arial Black';color: #0b2e13" class="checkout-summary-label">Subtotal ({{ total_count}})#}
+{#                                            </div>#}
+{#                                            <div class="checkout-summary-value">#}
+{#                                                <span style="font-family: 'Arial Black'" class="checkout-summary-noline-value"> {{total|currency}}</span>#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                    <div class="checkout-summary-row">#}
+{#                                        <div class="checkout-summary-main">#}
+{#                                            <div class="checkout-summary-label">Shipping Fee#}
+{#                                            </div>#}
+{#                                            <div class="checkout-summary-value">#}
+{#                                                <span style="font-family: 'Arial Black'" class="checkout-summary-noline-value">BDT 65</span>#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                                <div class="voucher-input">#}
+{#                                    <div class="voucher-input-inner">#}
+{#                                        <div class="voucher-input-col">#}
+{#                                            <span class="next-input next-input-single next-input-medium clear voucher-input-control">#}
+{#                                                <input type="text" id="automation-voucher-input" placeholder="Enter Voucher Code" value="" height="100%"></span>#}
+{#                                        </div>#}
+{#                                        <div class="voucher-input-col">#}
+{#                                            <button id="automation-voucher-input-button" type="button" class="next-btn next-btn-normal next-btn-large voucher-input-button">APPLY</button>#}
+{#                                        </div></div></div>#}
+{#                                <div class=" checkout-order-total">#}
+{#                                <div class="checkout-order-total-row">#}
+{#                                    <div style="color: #0b2e13" class="checkout-order-total-title">Total:#}
+{#                                    </div>#}
+{#                                    <div style="font-family: 'Arial Black'" class="checkout-order-total-fee">#}
+{#                                         {{ after_fee |currency }}#}
+{#                                        <small class="checkout-order-total-fee-tip">#}
+{#                                            VAT included, where applicable</small>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                                    <button  style="background-color: #ff5722" type="button" class="btn1"><a style="color: #0b2e13" href="/home/payment">Proceed to Pay</a></button>#}
+{#                            </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+        </div>
+        </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+</div>
+    <br>
+{% endblock %}

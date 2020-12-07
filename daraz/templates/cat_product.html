@@ -9,25 +9,25 @@
   navbar-expand-lg
    navbar-light bg-white">
 <div class="container-fluid mt-3">
-<section  class="toppbar ">
-			<div class="miid">
-				<div class="midright">
-					<div class="midright_mid">
-
-				       <form class="example" action="">
-				         <input type="text" placeholder="Search in daraz" name="search">
-				         <button type="submit"><i class="fa fa-search"></i></button>
-				       </form>
-
-
-			        </div>
-
-			    </div>
-
-
-			</div>
-
- 	</section>
+{#<section  class="toppbar ">#}
+{#			<div class="miid">#}
+{#				<div class="midright">#}
+{#					<div class="midright_mid">#}
+{##}
+{#				       <form class="example" action="">#}
+{#				         <input type="text" placeholder="Search in daraz" name="search">#}
+{#				         <button type="submit"><i class="fa fa-search"></i></button>#}
+{#				       </form>#}
+{##}
+{##}
+{#			        </div>#}
+{##}
+{#			    </div>#}
+{##}
+{##}
+{#			</div>#}
+{##}
+{# 	</section>#}
 </div>
 </nav>
 <div class="container-fluid mt-3">
@@ -45,7 +45,7 @@
 
 				{% for cat in request.session.cats %}
 				<a style="background-color: #d4edda" href="/home/{{cat.id}}"
-                   class="list-group-item list-group-item-action"><h6 style="color: #0b2e13">{{cat.name}}</h6></a>
+                   class="list-group-item list-group-item-action"><h6 style="color: #0b2e13;font-family: 'Arial Black'">{{cat.name}}</h6></a>
 				{% endfor %}
 			</div>
 		</div>

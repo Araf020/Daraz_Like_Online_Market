@@ -59,6 +59,7 @@
                 <input type="text" id="zip" name="zip" placeholder="example: 6530">
               </div>
             </div>
+
           </div>
 
 {#          <div class="col-50">#}
@@ -87,12 +88,17 @@
 {#              </div>#}
 {#            </div>#}
 {#          </div>#}
-          
+
         </div>
 {#        <label>#}
 {#          <input type="checkbox" checked="checked" name="sameadr"> Shipping address same as billing#}
 {#        </label>#}
-        <input type="submit" value="Continue to checkout" class="btn1">
+
+{#        <input type="submit" value="Continue to checkout" class="btn1">#}
+{##}
+{#      </form>#}
+    <input type="submit" value="Continue to checkout" class="btn1">
+
       </form>
     </div>
   </div>
@@ -103,10 +109,7 @@
 <br>
 
 
-   <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
-	<script src="{% static 'js/popper.min.js' %}"></script>
-	<script src="{% static 'js/bootstrap.min.js' %}"></script>
-	<script src="{%  static 'js/progressbar.js' %}"></script>
+
 
 
 {% endblock %}
