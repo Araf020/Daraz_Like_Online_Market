@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <link rel="stylesheet" href="{% static 'css/index1.css' %}">
     <link rel="stylesheet" href="{% static 'css/index2.css' %}">
+    <link rel="stylesheet" href="{% static 'css/index4.css' %}">
 
 
 	<link rel="shortcut icon" type="image/x-icon" href="{% static 'images/daraz.png'%}">
@@ -201,27 +202,27 @@
 {#              <span class="sr-only">(current)</span></a>#}
         </li>
         <li class="nav-item ">
-            <a style="color: #0b2e13" class="nav-link" href="/home/payment">Track My Orders</a>
+            <a style="font-family: 'Arial Black'" class="nav-link" href="/home/my_orders">Track My Orders</a>
 {#              <span class="sr-only">(current)</span></a>#}
         </li>
 
         <li class="nav-item ">
-            <a style="font-family: 'Arial Black'" class="nav-link" href="/home/profile">{{ request.session.name }}</a>
+            <a style="font-family: 'Arial Black';color: black;font-size: larger" class="nav-link" href="/home/profile">{{ request.session.name }}</a>
 {#              <span class="sr-only">(current)</span></a>#}
         </li>
 
         <li class="nav-item ">
-            <a style="color: #0b2e13" class="nav-link" href="/home/logout">Logout</a>
+            <a style="font-family: 'Arial Black'" class="nav-link" href="/home/logout">Logout</a>
 {#            <span class="sr-only">(current)</span></a>#}
         </li>
         {% else %}
 
         <li class="nav-item ">
-            <a style="color: #0b2e13"  class="nav-link" href="/home/signup">Signup</a>
+            <a style="font-family: 'Arial Black'"  class="nav-link" href="/home/signup">Signup</a>
 {#            <span class="sr-only">(current)</span></a>#}
         </li>
         <li class="nav-item ">
-            <a style="color: #0b2e13" class="nav-link" href="/home/login">Login</a>
+            <a style="font-family: 'Arial Black'" class="nav-link" href="/home/login">Login</a>
 {#            <span class="sr-only">(current)</span></a>#}
         </li>
         {% endif %}

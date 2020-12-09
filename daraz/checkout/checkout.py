@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 import random
+from djangoProject6.settings import EMAIL_HOST_USER
 import os
 import hashlib
 from datetime import datetime
@@ -7,6 +8,7 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.views import View
 # from .models import people
 from django.db import connection
+from django.core.mail import send_mail
 
 def getPrice(product):
     try:
@@ -19,7 +21,7 @@ def getPrice(product):
         price = 0
     return price
 
-def makeorder(request, peopleid, orderdate,pay_status):
+def makeorder(request, peopleid, orderdate,pay_status,method):
     sqlonOrder = "INSERT INTO ORDERS(ORDER_ID, CUSTOMER_ID, ORDER_DATE, AMOUNT, QUANTITY, PAYMENT_STATUS) VALUES (%s,%s,%s,%s,%s,%s)"
     try:
         cart = request.session.get('cart')
@@ -29,6 +31,7 @@ def makeorder(request, peopleid, orderdate,pay_status):
     cartkeys = list(cart.keys())
     try:
         cur = connection.cursor()
+        paymentid = random.randrange(start=320983092,step=1)
         for id in cartkeys:
             qty = cart[id]
             id = int(id)
@@ -38,6 +41,7 @@ def makeorder(request, peopleid, orderdate,pay_status):
             cur.execute(sqlonOrder, [orderid, peopleid, orderdate, cost, qty, pay_status])
             connection.commit()
             push_on_product_orders(request,orderid)
+            push_on_payment(orderid, paymentid, 'True', method)
             make_shipment(request, shipmentid, orderdate, orderid)
             print('ordered!')
         cur.close()
@@ -121,48 +125,35 @@ def verify_pin(request):
             print('could not find the pin!')
             return redirect('bkash')
         if verified:
-            print('bal')
-            paymentid = random.randrange(start=94923948, step=1)
-            orderid = random.randrange(start=4893274, step=1)
+
             peopleid = get_customer_id(email)
             items = get_items(request)
-            count = request.session['qty']
-
-            print(
-                'trying to order: step-1'
-            )
-            print("people id : " + str(peopleid))
-            # print(peopleid)
-            print(email)
-            orderdate = datetime.now().strftime("%d-%m-%y %H:%M:%S")
+            # count = request.session['qty']
+            orderdate = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             print(orderdate)
-            try:
-                total_amount = request.session['total']
-            except:
-                print('failed to get amount from session!')
-                total_amount = 0
             '''Pushing  Orders in order Table'''
             items = str(items)
             print("products:" + items)
-
-            '''Now put them on Product_Orders Table'''
-
-            makeorder(request, peopleid, orderdate, 'True')
-            # push_on_product_orders(request, orderid)
-            sqlonBkash = "select PIN,OTP from BKASH where ACCNO = %s"
-            sqlonsHipment = "INSERT INTO SHIPMENTS(SHIPMENT_ID, SHIPMENT_DATE, ORDER_ID, STATUS, DELIVERYAT) VALUES (%s,%s,%s,%s,%s)"
-            paymentid = random.randrange(start=102023, step=1)
-            paymentstatus = "True"
-            '''setting payment_status and Credit_card for now. later it should be checked first!'''
             method = 'bkash'
-            # shipmentid = random.randrange(start=orderid, step=1)
-            # shipdate = orderdate
-
-            # make_shipment(request, shipmentid, shipdate, orderid)
+            '''Now put them on Product_Orders Table'''
+            makeorder(request, peopleid, orderdate, 'True',method)
             print('order successful!')
+
+            '''sending a mail to customer..'''
+            print('sending email..')
+            name = request.session['name']
+            msg = 'Hello, ' + name + '\nYour Order has Been Placed SuccessFully.\n' + 'We will reach you to reconfirm very soon!\n' + 'You Have ' + str(
+                request.session['pack']) +' packages in process to recieve' +'\nYour orders: \n' + str(
+                items) + '\nTotal cost: BDT '+str(request.session['total'] + 65*request.session['pack'])+'\n'
+            sub = 'Order Placed'
+            try:
+                sendMail(email, sub, msg)
+            except:
+                print('failed to send mail!')
+
             request.session['cart'] = {}
             request.session['productList'] = {}
-            return redirect('homepage')
+            return redirect('my_orders')
 
         return redirect('homepage')
 
@@ -258,57 +249,6 @@ def bkash_check(request):
         phoneNo = request.POST.get('accno')
         request.session['phone'] = phoneNo
         otp = random.randrange(start=132457,step=1)
-        # paymentid = random.randrange(start=94923948, step=1)
-        # orderid = random.randrange(start=4893274,step=1)
-        # peopleid = get_customer_id(email)
-        #
-        #
-        # # expdate = request.POST.get('expdate')
-        # # cvv = request.POST.get('cvv')
-        # # zipcode = int(request.POST.get('zipcode'))
-        #
-        #
-        # items = get_items(request)
-        # count = request.session['qty']
-        #
-        # print(
-        #     'trying to order: step-1'
-        # )
-        # print("people id : " + str(peopleid))
-        # # print(peopleid)
-        # print(email)
-        # orderdate = datetime.now().strftime("%d-%m-%y %H:%M:%S")
-        # print(orderdate)
-        # try:
-        #     total_amount = request.session['total']
-        # except:
-        #     print('failed to get amount from session!')
-        #     total_amount = 0
-        # '''Pushing  Orders in order Table'''
-        # items = str(items)
-        # print("products:" + items)
-        #
-        # '''Now put them on Product_Orders Table'''
-        # count = request.session['qty']
-        # # makeorder(orderid, peopleid, orderdate, total_amount, count, 'True', items)
-        # # push_on_product_orders(request, orderid)
-        # sqlonBkash = "select PIN,OTP from BKASH where ACCNO = %s"
-        # sqlonsHipment = "INSERT INTO SHIPMENTS(SHIPMENT_ID, SHIPMENT_DATE, ORDER_ID, STATUS, DELIVERYAT) VALUES (%s,%s,%s,%s,%s)"
-        # paymentid = random.randrange(start=102023, step=1)
-        # paymentstatus = "True"
-        # '''setting payment_status and Credit_card for now. later it should be checked first!'''
-        # method = 'bkash'
-        # shipmentid = random.randrange(start=orderid, step=1)
-        # print('expdate', end=' ')
-        #
-        #
-        # print('i m here1')
-        # # push_on_payment(request, orderid, paymentid, method)
-        # print('i m here 2')
-        accfromdb = None
-        # isacc = request.session['acc']
-        # pin = None
-        # if isacc == False:
         print('acc not given')
         # try:
         phoneNo = int(phoneNo)
@@ -326,72 +266,28 @@ def bkash_check(request):
             print('not found the acc..')
             return render(request, 'bkash.html',
                           {'msg:': "This account Doesn't exist!\nPlease Open an account through Bkash App"})
-        # cur.execute(sqlonBkash, [phoneNo])
-        # result = cur.fetchone()
-        # otp = result[1]
+
         print(request.session['acc'])
+        print('sending mail...')
+        name = request.session['name']
+        sub = 'Bkash Verification code'
+        msg = 'Hello, ' + name + '\nYour verfication code: ' + str(otp)
+        try:
+            sendMail(email,sub,msg)
+        except:
+            print('failed to send mail!')
+        print('mail sent!')
         return redirect('v_b')
-        # pin = result[0]
-        # cur.close()
-        # if pin:
-        #     print('acc verified')
-        #
-        #     verify_bkash(request,otp)
-        # else:
-        #     return redirect('bkash')
-
-        # except:
-            #     # print(str(pinfrom_user))
-            #     print('failed to make the transaction!')
-            #     return render(request, 'bkash.html',
-            #                   {'msg:': "This account Doesn't exist!\nPlease Open an account through Bkash App"})
-
-        # # elif isacc == True:
-        #     print('acc given')
-        #     vc = request.POST.get('vc')
-        #     print('vc : ', end=' ')
-        #     print(vc)
-        #     pinfrom_user = None
-        #     if int(vc) == otp:
-        #         print('verified!')
-        #
-        #         request.session['verified'] = True
-        #         request.session['acc'] = False
-        #
-        #     else:
-        #         print(otp, vc)
-        #         print('not verified!')
-        #         request.session['verified'] = False
-        #         return render(request, 'bkash.html', {'vmsg': 'wrong code entered!'})
-        # elif request.session['verified']:
-        #     pinfrom_user = request.POST.get('pin')
-        #     # return redirect('bkash')
-        #     if pinfrom_user:
-        #          if pin == int(pinfrom_user):
-        #             print('user found!')
-        #
-        # else:
-        #     print('ki hsse esob!')
-        # # print('i m here 3')
-        # # date = datetime.now().strftime("%d-%m-%y %H:%M:%S")
-        # # print(date)
-        # # print('order successful!')
-        # # # make_shipment(request, shipmentid, date, orderid)
-        # # request.session['cart'] = {}
-        # # request.session['productList'] = {}
-        # return redirect('bkash')
 
     else:
 
         return render(request, 'bkash.html',{})
 
 
-
 def credit_check(request):
     email = None
     try:
         email = request.session['email']
-
     except:
         print("couldn't find you logged in")
         return redirect('/home/login')
@@ -407,47 +303,21 @@ def credit_check(request):
         cardno = request.POST.get('cardnumber')
         expdate = request.POST.get('expdate')
         cvv = request.POST.get('cvv')
-        # zipcode = int(request.POST.get('zipcode'))
-        # otp = random.randrange(3456)
-
-        # orderid = random.randrange(start=2357119, step=1)
+        #
         items = get_items(request)
-        count = request.session['qty']
-
-        print(
-            'trying to order: step-1'
-        )
+        # count = request.session['qty']
         peopleid = get_customer_id(email)
         print("people id : " + str(peopleid))
-        # print(peopleid)
-        print(email)
-        orderdate = datetime.now().strftime("%d-%m-%y %H:%M:%S")
+        orderdate = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         print(orderdate)
-        try:
-            total_amount = request.session['total']
-        except:
-            print('failed to get amount from session!')
-            total_amount = 0
-        '''Pushing  Orders in order Table'''
-        items = str(items)
-        print("products:"+ items)
 
         '''Now put them on Product_Orders Table'''
-        count = request.session['qty']
-        makeorder(request, peopleid, orderdate,'True')
+
         # push_on_product_orders(request,orderid)
         sqlonCreditcard = ("select CARD_NO, NAME_ON_CARD, EXP_DATE, CVV,ZIP_CODE from CREDIT_CARD where  CARD_NO=%s")
-        sqlonsHipment = "INSERT INTO SHIPMENTS(SHIPMENT_ID, SHIPMENT_DATE, ORDER_ID, STATUS, DELIVERYAT) VALUES (%s,%s,%s,%s,%s)"
-        paymentid = random.randrange(start=102023, step=1)
-        paymentstatus = "True"
+
         '''setting payment_status and Credit_card for now. later it should be checked first!'''
         method = 'creditcard'
-        shipmentid = random.randrange(start=orderid, step=1)
-        print('expdate', end=' ')
-        print(expdate)
-        print('i m here1')
-
-        # push_on_payment(request,orderid,paymentid,status,method)
 
         print('i m here 2')
         CARD_NO = None
@@ -471,8 +341,7 @@ def credit_check(request):
             return redirect('order_place')
         print("expdate: ", end = ' ')
         print(expdate)
-        # expdate = datetime(expdate)
-        # expdate = datetime.__format__(expdate,"%d-%m-%yy")
+
         try:
             EXP_DATE = datetime.__format__(EXP_DATE,"%Y-%m-%d")
         except:
@@ -489,8 +358,9 @@ def credit_check(request):
         if expdate == EXP_DATE and int(cardno) == CARD_NO and int(cvv) == CVV and nameoncard== NAME_ON_CARD :
             if  expdate >= datetime.now().strftime("%Y-%m-%d") :
                 print('card verified!')
-                '''making the payment '''
-                push_on_payment(orderid, paymentid, 'True', 'creditcard')
+                '''making order and payment '''
+                makeorder(request, peopleid, orderdate, 'True',method)
+                # push_on_payment(orderid, paymentid, 'True', 'creditcard')
             else:
                 return render(request,'check1.html',{'msg':'Your Credit Card is out of Date, Sir!'})
 
@@ -501,12 +371,24 @@ def credit_check(request):
         print('i m here 3')
         date = datetime.now().strftime("%d-%m-%y %H:%M:%S")
         print(date)
-        # print('order successful!')
-        # make_shipment(request,shipmentid,date,orderid)
         print('order successful!')
+
+        '''sending a mail'''
+        print('sending email..')
+
+        name = request.session['name']
+        msg = 'Hello, ' + name + '\nYour Order has Been Placed SuccessFully.\n' + 'We will reach you to reconfirm very soon!\n' + 'You Have ' + str(
+            request.session['pack']) + ' packages in process to recieve' + '\nYour orders: \n' + str(
+            items) + '\nTotal cost: BDT ' + str(request.session['total'] + 65*request.session['pack']) + '\n'
+        sub = 'Order Placed'
+        try:
+            sendMail(email, sub, msg)
+        except:
+            print('failed to send mail!')
+
         request.session['cart'] = {}
         request.session['productList'] = {}
-        return redirect('homepage')
+        return redirect('my_orders')
 
     else:
        return render(request,'check1.html',{})
@@ -647,7 +529,7 @@ def place_your_order(request):
     request.session['qty'] = total_count
     request.session['pack'] = package
 
-    return render(request,'placeorder.html',{'products':product_dic, 'total_count':total_count,'total':total,'after_fee': total + 69*package,'fee':69*package})
+    return render(request,'placeorder.html',{'products':product_dic, 'total_count':total_count,'total':total,'after_fee': total + 69*package,'fee':65*package})
 
 
 def getProductdic(request):
@@ -817,6 +699,14 @@ def Initiate_Cursor():
     return cursor
 
 
+def sendMail(email,subject,msg):
+    send_mail(
+        subject,
+        msg,
+        EMAIL_HOST_USER,
+        [email],
+        fail_silently=False,
+    )
 def emptyCart(request):
     request.session.delete('cart')
     request.session.delete('productList')

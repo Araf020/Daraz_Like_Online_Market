@@ -5,6 +5,7 @@ from . import views
 from .checkout import checkout
 from .LoginAndLogout import loginOrSignup
 from .Sales import sale
+from .order import ordertrack
 
 
 urlpatterns = [
@@ -49,8 +50,10 @@ urlpatterns = [
     path('home/pay_bkash/',checkout.bkash_check, name = 'bkash'),
     path('home/verify_bkash/',checkout.verify_bkash, name = 'v_b'),
     path('home/confirm_bkash_pay/',checkout.verify_pin, name = 'v_p'),
+
     # path('home/pay_card/',checkout.credit_check, name = 'credit'),
     path('home/place_your_order/',checkout.place_your_order , name = 'order_place'),
-    path('home/order_confirmation/',checkout.order_confirmation, name = 'order_confirmation')
+    path('home/order_confirmation/',checkout.order_confirmation, name = 'order_confirmation'),
+    path('home/my_orders',ordertrack.orderlist, name = 'my_orders'),
 
 ]

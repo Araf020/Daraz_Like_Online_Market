@@ -7,129 +7,302 @@
 
 
 
-<div class="lzd-playground-main">
+<div class="container-fluid mt-3">
     <div class="lzd-playground-nav">
         <div class="member-info">
-            <p><span>Hello,&nbsp;</span><span id="lzd_current_logon_user_name">{{ request.session.name}}</span></p>
+            <p>
+                <span>Hello,&nbsp;</span>
+                <span id="lzd_current_logon_user_name" style=" color: black">{{ request.session.name}}</span>
+            </p>
             <div id="lzd_current_logon_user_isVerified" class="label verified">
-                <img height="20px" src="{{request.session.img_url}}">
-            </div>
+<img height="20px" src="//laz-img-cdn.alicdn.com/tfs/TB1Yvbxh8HH8KJjy0FbXXcqlpXa-208-40.png" data-spm-anchor-id="a2a0e.order_list.0.i1.64b92829LTlW0g">            </div>
 
         </div>
         <ul class="nav-container">
-            <li class="item" id="Manage-My-Account"><a href="/home/profile" data-spm="Manage-My-Account"><span>Manage My Account</span></a>
+            <li class="item" id="Manage-My-Account"><a href="/home/profile" data-spm="Manage-My-Account"><span style="color: black">Manage My Account</span></a>
                 <ul class="item-container">
-                    <li id="My-profile" class="sub"><a href="/home/profile" data-spm="My-profile">My Profile</a></li>
-                    <li id="Address-book" class="sub"><a href="#" data-spm="Address-book">Address Book</a></li>
-                    <li id="Payment-methods" class="sub"><a href="#" data-spm="Payment-methods">My Payment Options</a></li>
-                    <li id="Vouchers" class="sub"><a href="#" data-spm="Vouchers">Vouchers</a></li>
+                    <li id="My-profile" class="sub"><a href="/home/profile" data-spm="My-profile" style="color: black">My Profile</a></li>
+                    <li id="Address-book" class="sub"><a href="#" data-spm="Address-book" style="color: black">Address Book</a></li>
+                    <li id="Payment-methods" class="sub"><a href="#" data-spm="Payment-methods" style="color: black">My Payment Options</a></li>
+                    <li id="Vouchers" class="sub"><a href="#" data-spm="Vouchers" style="color: black">Vouchers</a></li>
                 </ul></li>
-            <li class="item" id="My-Orders"><a class="active" href="/home/orders" data-spm="My-Orders"><span>My Orders</span></a>
+            <li class="item" id="My-Orders"><a class="active" href="/home/my_orders" data-spm="My-Orders"><span style="color: black"> My Orders</span></a>
                 <ul class="item-container">
                     <li id="Returns" class="sub"><a href="#" data-spm="Returns">My Returns</a></li>
-                    <li id="Cancellations" class="sub"><a href="#" data-spm="Cancellations">My Cancellations</a></li>
+                    <li id="Cancellations" class="sub"><a href="#" data-spm="Cancellations" style="color: black">My Cancellations</a></li>
                 </ul></li>
-            <li class="item" id="My-Reviews"><a href="//my.daraz.com.bd/customer/myReview/my-reviews" data-spm="My-Reviews"><span>My Reviews</span></a>
-                <ul class="item-container">
-
-                </ul></li>
-            <li class="item" id="My-Wishlists"><a href="//my.daraz.com.bd/wishlist/index" data-spm="My-Wishlists"><span>My Wishlist &amp; Followed Stores</span></a>
-                <ul class="item-container">
-
-                </ul></li>
-            <li class="item" id="Sell-On-Lazada"><a href="/home/sell" data-spm="Sell-On-Lazada"><span>Sell On Daraz</span></a>
+{#            <li class="item" id="My-Reviews"><a href="//my.daraz.com.bd/customer/myReview/my-reviews" data-spm="My-Reviews"><span>My Reviews</span></a>#}
+{#                <ul class="item-container">#}
+{##}
+{#                </ul></li>#}
+{#            <li class="item" id="My-Wishlists"><a href="//my.daraz.com.bd/wishlist/index" data-spm="My-Wishlists"><span>My Wishlist &amp; Followed Stores</span></a>#}
+{#                <ul class="item-container">#}
+{##}
+{#                </ul></li>#}
+            <li class="item" id="Sell-On-Lazada"><a href="/home/sell" data-spm="Sell-On-Lazada"><span style="color: #0b2e13;font-family: Helvetica Neue, Helvetica, Tahoma, Arial, Microsoft YaHei, PingFang SC">Sell On Daraz</span></a>
                 <ul class="item-container">
 
                 </ul></li>
         </ul>
     </div>
 
-    <div class="lzd-playground-right">
+    <div class="lzd-playground-right" style="width: 1300px">
         <div class="breadcrumb">
-            <a class="first " href="/home/orders">My Orders</a>
+            <a class="first " href="/home/my_orders">My Orders</a>
         </div>
         <div id="container" class="container">
-        <div>
-        <div class="order-list">
-        <div class="order-list-tabs">
-        <span class="order-tab-item order-tab-item-active">All</span>
-        <span class="order-tab-item ">To Pay</span>
-        <span class="order-tab-item ">To Ship</span>
-        <span class="order-tab-item ">To Receive</span>
+            <div>
+                <div class="order-list">
+{#                    <div class="order-list-tabs">#}
+{#                        <span class="order-tab-item order-tab-item-active">All</span>#}
+{#                        <span class="order-tab-item ">To Pay</span>#}
+{#                        <span class="order-tab-item ">To Ship</span>#}
+{#                        <span class="order-tab-item ">To Receive</span>#}
+{#                    </div>#}
+                    <div class="order-filter">
+                        <span class="order-filter-text" style="color: black;font-size: larger;font-family: Arial">Show :</span>
+                        <span class="next-select medium filter" tabindex="0">
+                        <input type="hidden" name="select-faker" value="1">
+                        <span style="color: #186bca; font-family: Arial;font-size: larger" class="next-select-inner">All orders</span>
+                        <i class="next-icon next-icon-arrow-down next-icon-small next-select-arrow"></i>
+                         </span>
+                    </div>
+                    <div class="orders">
+{#                        <div class="order">#}
+{#                            <div class="order-info">#}
+{#                                <div class="pull-left">#}
+{#                                    <div class="info-order-left-text">Order<a class="link"> #611947554479231</a>#}
+{#                                    </div>#}
+{#                                    <p class="text info desc">Placed on 07 Dec 2020  01:05:14</p>#}
+{#                                </div>#}
+{#                                <div class="pull-cont">#}
+{##}
+{#                                </div>#}
+{#                                <a class="pull-right link manage" style="color: rgb(26, 156, 183);">MANAGE</a>#}
+{#                                <div class="clear">#}
+{##}
+{#                                </div>#}
+{#                            </div>#}
+{#                            <div class="order-item">#}
+{#                                <div class="item-pic" data-spm="detail_image">#}
+{#                                    <a href="#">#}
+{#                                        <img src="https://static-01.daraz.com.bd/p/mdc/75be56a902f7979310aed5999f46eb4f.jpg">#}
+{#                                    </a>#}
+{#                                </div>#}
+{#                                <div class="item-main item-main-mini">#}
+{#                                    <div>#}
+{#                                        <div class="text title item-title" data-spm="details_title">Stylish Polo T-Shirt For Men's</div>#}
+{#                                        <p class="text desc">#}
+{##}
+{#                                        </p>#}
+{#                                        <p class="text desc bold">#}
+{##}
+{#                                        </p>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                                <div class="item-quantity">#}
+{#                                    <span><span class="text desc info multiply">Qty:</span>#}
+{#                                        <span class="text">&nbsp;1</span>#}
+{#                                    </span>#}
+{#                                </div>#}
+{#                                <div class="item-status item-capsule">#}
+{#                                    <p class="capsule">Cancelled</p>#}
+{#                                </div>#}
+{#                                <div class="item-info">#}
+{##}
+{#                                </div>#}
+{#                                <div class="clear">#}
+{##}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <div class="order">#}
+{#                            <div class="order-info">#}
+{#                                <div class="pull-left">#}
+{#                                    <div class="info-order-left-text">Order#}
+{#                                        <a class="link"> #611728491779231</a>#}
+{#                                    </div><p class="text info desc">Placed on 03 Dec 2020  20:37:39</p>#}
+{#                                </div><div class="pull-cont"></div>#}
+{#                                <a class="pull-right link manage" style="color: rgb(26, 156, 183);">MANAGE</a>#}
+{#                                <div class="clear">#}
+{##}
+{#                                </div>#}
+{#                            </div>#}
+{#                            <div class="order-item">#}
+{#                                <div class="item-pic" data-spm="detail_image">#}
+{#                                    <a href="#">#}
+{#                                        <img src="https://static-01.daraz.com.bd/p/9f91566665a61fe302d02c1587491435.jpg">#}
+{#                                    </a>#}
+{#                                </div>#}
+{#                                <div class="item-main item-main-mini">#}
+{#                                    <div>#}
+{#                                        <div class="text title item-title" data-spm="details_title">#}
+{#                                            2020 summer new casual homme cool T-Shirts Summer Poly Cotton Tops Tees Print T Shirt Men Loose T-Shirt Homme Fashion Tshirts#}
+{#                                        </div>#}
+{#                                        <p class="text desc"></p>#}
+{#                                        <p class="text desc bold"></p>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                                <div class="item-quantity">#}
+{#                                    <span>#}
+{#                                        <span class="text desc info multiply">Qty:</span>#}
+{#                                        <span class="text">&nbsp;1</span>#}
+{#                                    </span>#}
+{#                                </div>#}
+{#                                <div class="item-status item-capsule">#}
+{#                                    <p class="capsule">Cancelled</p>#}
+{#                                </div>#}
+{#                                <div class="item-info">#}
+{##}
+{#                                </div>#}
+{#                                <div class="clear">#}
+{##}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <div class="order">#}
+{#                            <div class="order-info">#}
+{#                                <div class="pull-left">#}
+{#                                    <div class="info-order-left-text">#}
+{#                                        Order <a class="link"> #611868585079231</a>#}
+{#                                    </div>#}
+{#                                    <p class="text info desc">Placed on 03 Dec 2020  14:09:17</p>#}
+{#                                </div>#}
+{#                                <div class="pull-cont">#}
+{##}
+{#                                </div>#}
+{#                                <a class="pull-right link manage" style="color: rgb(26, 156, 183);">MANAGE</a>#}
+{#                                <div class="clear">#}
+{##}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="order-item">#}
+{#                    <div class="item-pic" data-spm="detail_image">#}
+{#                        <a href="#">#}
+{#                            <img src="https://static-01.daraz.com.bd/p/f729851ff36dd5a5ae1bf0f7b03a28be.jpg"></a>#}
+{#                    </div>#}
+{#                    <div class="item-main item-main-mini">#}
+{#                        <div>#}
+{#                            <div class="text title item-title" data-spm="details_title">Stylish Short Sleeve Polo for Men</div>#}
+{#                            <p class="text desc">#}
+{##}
+{#                            </p>#}
+{#                            <p class="text desc bold"></p>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="item-quantity">#}
+{#                        <span>#}
+{#                            <span class="text desc info multiply">Qty:</span>#}
+{#                            <span class="text">&nbsp;1</span>#}
+{#                        </span>#}
+{#                    </div>#}
+{#                    <div class="item-status item-capsule">#}
+{#                        <p class="capsule">Cancelled</p>#}
+{#                    </div>#}
+{#                    <div class="item-info">#}
+{##}
+{#                    </div>#}
+{#                    <div class="clear">#}
+{##}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="order">#}
+{#                <div class="order-info">#}
+{#                    <div class="pull-left">#}
+{#                        <div class="info-order-left-text">Order <a class="link"> #611814771979231</a>#}
+{#                        </div>#}
+{#                        <p class="text info desc">Placed on 01 Dec 2020  00:44:30</p>#}
+{#                    </div>#}
+{#                    <div class="pull-cont">#}
+{##}
+{#                    </div>#}
+{#                    <a class="pull-right link manage" style="color: rgb(26, 156, 183);">MANAGE</a>#}
+{#                    <div class="clear">#}
+{##}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="order-item">#}
+{#                    <div class="item-pic" data-spm="detail_image">#}
+{#                        <a href="#"><img src="https://static-01.daraz.com.bd/p/e902ef821e5ae31012b1b9696bdcaef0.jpg"></a>#}
+{#                    </div>#}
+{#                    <div class="item-main item-main-mini">#}
+{#                        <div>#}
+{#                            <div class="text title item-title" data-spm="details_title">Army Green Cotton Long Sleeve Casual Shirt For Men</div>#}
+{#                            <p class="text desc"></p>#}
+{#                            <p class="text desc bold"></p>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="item-quantity">#}
+{#                        <span>#}
+{#                            <span class="text desc info multiply">Qty:</span>#}
+{#                            <span class="text">&nbsp;1</span>#}
+{#                        </span>#}
+{#                    </div>#}
+{#                    <div class="item-status item-capsule">#}
+{#                        <p class="capsule">Cancelled</p>#}
+{#                    </div>#}
+{#                    <div class="item-info">#}
+{##}
+{#                    </div>#}
+{#                    <div class="clear">#}
+{##}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+            {% for product in products %}
+            <div class="container w-100">
+                <div class="order-info">
+                    <div class="pull-left">
+                        <div style="color: black" class="info-order-left-text">
+                            Order# <a style="color: black" class="link">{{product.orderid}}1</a>
+                        </div>
+                        <p style="color: black" class="text info desc">Placed on {{ product.orderdate }}</p>
+                    </div>
+                    <div class="pull-cont">
+
+                    </div>
+                    <a class="pull-right link manage" style="color: black">MANAGE</a>
+                    <div class="clear">
+
+                    </div>
+                </div>
+                <div class="order-item">
+                    <div class="item-pic" data-spm="detail_image">
+                        <a href="#"><img src="{% static product.product_img %}"></a>
+                    </div>
+                    <div class="item-main item-main-mini">
+                        <div>
+                            <div style="color:#186bca;font-size: larger" class="text title item-title" data-spm="details_title">
+                                {{product.name}}
+                            </div>
+                            <p class="text desc"></p>
+                            <p class="text desc bold"></p>
+                        </div>
+                    </div>
+                    <div class="item-quantity">
+                        <span>
+                            <span style="color:#c43a25" class="text desc info multiply">Qty:</span>
+                            <span style="color: #c43a25" class="text">&nbsp;{{ product.quantity }}</span>
+                        </span>
+                    </div>
+                    <div class="item-status item-capsule">
+                        <p style="color: #2abbe8" class="capsule">Processing</p>
+                    </div>
+                    <div class="item-info">
+
+                    </div>
+                    <div class="clear">
+
+                    </div>
+                </div>
+            </div>
+                        {% endfor %}
         </div>
-        <div class="order-filter">
-        <span class="order-filter-text">Show :</span>
-        <span class="next-select medium filter" tabindex="0">
-        <input type="hidden" name="select-faker" value="1">
-        <span class="next-select-inner">Last 5 orders</span>
-        <i class="next-icon next-icon-arrow-down next-icon-small next-select-arrow"></i>
-        </span>
         </div>
-        <div class="orders">
-        <div class="order">
-        <div class="order-info">
-        <div class="pull-left">
-        <div class="info-order-left-text">
-        Order
-        <a class="link"> #611947554479231</a>
         </div>
-        <p class="text info desc">
-        Placed on 07 Dec 2020  01:05:14</p>
         </div>
-        <div class="pull-cont">
-</div>
-<a class="pull-right link manage" style="color: rgb(26, 156, 183);">MANAGE</a>
-<div class="clear">
-</div>
-</div>
-<div class="order-item">
-<div class="item-pic" data-spm="detail_image">
-<a href="#">
-<img src="https://static-01.daraz.com.bd/p/mdc/75be56a902f7979310aed5999f46eb4f.jpg">
-</a>
-</div>
-<div class="item-main item-main-mini">
-<div>
-<div class="text title item-title" data-spm="details_title">Stylish Polo T-Shirt For Men's</div>
-<p class="text desc">
-</p>
-<p class="text desc bold">
-</p>
-</div>
-</div>
-<div class="item-quantity">
-<span><span class="text desc info multiply">Qty:</span>
-<span class="text">&nbsp;1</span>
-</span>
-</div>
-<div class="item-status item-capsule">
-<p class="capsule">Cancelled</p>
-</div>
-<div class="item-info"></div>
-<div class="clear">
-</div>
-</div>
-</div>
-<div class="order">
-<div class="order-info">
-<div class="pull-left">
-<div class="info-order-left-text">Order
-<a class="link"> #611728491779231</a>
-</div><p class="text info desc">Placed on 03 Dec 2020  20:37:39</p>
-</div><div class="pull-cont"></div>
-<a class="pull-right link manage" style="color: rgb(26, 156, 183);">MANAGE</a>
-<div class="clear">
-</div>
-</div>
-<div class="order-item">
-<div class="item-pic" data-spm="detail_image">
-<a href="#">
-<img src="https://static-01.daraz.com.bd/p/9f91566665a61fe302d02c1587491435.jpg">
-</a>
-</div>
-<div class="item-main item-main-mini">
-<div><div class="text title item-title" data-spm="details_title">
-    2020 summer new casual homme cool T-Shirts Summer Poly Cotton Tops Tees Print T Shirt Men Loose T-Shirt Homme Fashion Tshirts</div><p class="text desc"></p><p class="text desc bold"></p></div></div><div class="item-quantity"><span><span class="text desc info multiply">Qty:</span><span class="text">&nbsp;1</span></span></div><div class="item-status item-capsule"><p class="capsule">Cancelled</p></div><div class="item-info"></div><div class="clear"></div></div></div><div class="order"><div class="order-info"><div class="pull-left"><div class="info-order-left-text">Order <a class="link"> #611868585079231</a></div><p class="text info desc">Placed on 03 Dec 2020  14:09:17</p></div><div class="pull-cont"></div><a class="pull-right link manage" style="color: rgb(26, 156, 183);">MANAGE</a><div class="clear"></div></div><div class="order-item"><div class="item-pic" data-spm="detail_image"><a href="#"><img src="https://static-01.daraz.com.bd/p/f729851ff36dd5a5ae1bf0f7b03a28be.jpg"></a></div><div class="item-main item-main-mini"><div><div class="text title item-title" data-spm="details_title">Stylish Short Sleeve Polo for Men</div><p class="text desc"></p><p class="text desc bold"></p></div></div><div class="item-quantity"><span><span class="text desc info multiply">Qty:</span><span class="text">&nbsp;1</span></span></div><div class="item-status item-capsule"><p class="capsule">Cancelled</p></div><div class="item-info"></div><div class="clear"></div></div></div><div class="order"><div class="order-info"><div class="pull-left"><div class="info-order-left-text">Order <a class="link"> #611814771979231</a></div><p class="text info desc">Placed on 01 Dec 2020  00:44:30</p></div><div class="pull-cont"></div><a class="pull-right link manage" style="color: rgb(26, 156, 183);">MANAGE</a><div class="clear"></div></div><div class="order-item"><div class="item-pic" data-spm="detail_image"><a href="#"><img src="https://static-01.daraz.com.bd/p/e902ef821e5ae31012b1b9696bdcaef0.jpg"></a></div><div class="item-main item-main-mini"><div><div class="text title item-title" data-spm="details_title">Army Green Cotton Long Sleeve Casual Shirt For Men</div><p class="text desc"></p><p class="text desc bold"></p></div></div><div class="item-quantity"><span><span class="text desc info multiply">Qty:</span><span class="text">&nbsp;1</span></span></div><div class="item-status item-capsule"><p class="capsule">Cancelled</p></div><div class="item-info"></div><div class="clear"></div></div></div><div class="order"><div class="order-info"><div class="pull-left"><div class="info-order-left-text">Order <a class="link"> #602122114579231</a></div><p class="text info desc">Placed on 19 Jul 2019  15:07:50</p></div><div class="pull-cont"></div><a class="pull-right link manage" style="color: rgb(26, 156, 183);">MANAGE</a><div class="clear"></div></div><div class="order-item"><div class="item-pic" data-spm="detail_image"><a href="#"><img src="https://static-01.daraz.com.bd/original/03bac93edd664297e65ed2ddb5e012b9.jpg"></a></div><div class="item-main item-main-mini"><div><div class="text title item-title" data-spm="details_title">Seat Back Support for Office Chair - Black</div><p class="text desc"></p><p class="text desc bold"></p></div></div><div class="item-quantity"><span><span class="text desc info multiply">Qty:</span><span class="text">&nbsp;1</span></span></div><div class="item-status item-capsule"><p class="capsule">Cancelled</p></div><div class="item-info"></div><div class="clear"></div></div></div></div></div></div></div>
+
     </div>
 
 </div>

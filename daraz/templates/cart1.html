@@ -39,20 +39,20 @@
 			</div>
 		</div>
 
-<div class="container" style="font-variant-caps: normal">
+<div class="container " style="font-variant-caps: normal">
 
    <div class="border rounded p-4 m-4">
         <p class="display-4 pl-4 ml-4" style="font-family: 'Arial Black';color: #0b2e13">Your Cart</p>
-        <hr>
+{#        <hr>#}
         <table class="table">
             <thead>
                 <tr>
-                    <th>Sno.</th>
-                    <th>Image</th>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Total</th>
+                    <th style="color: black">Sno.</th>
+                    <th></th>
+                    <th style="color: black">Product</th>
+                    <th style="color: black">Price</th>
+                    <th style="color: black">Quantity</th>
+                    <th style="color: black">Total</th>
                 </tr>
             </thead>
             <tbody>
@@ -70,7 +70,7 @@
 								<input hidden type="text" name='remove' value='True'>
                             <button style="background-color: #ff5722" type="submit"  class="btn"><h1>---</h1></button>
                         </form>
-                        {{product.quantity}}
+                        <p style="color: black;font-family: 'Arial Black'">{{product.quantity}}</p>
                         <form class="col-6 " method="POST">
 								{% csrf_token %}
 								<input hidden type="text" name='product' value='{{product.id}}'>
