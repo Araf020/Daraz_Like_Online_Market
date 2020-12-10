@@ -8,7 +8,7 @@ from django.views import View
 # from .models import people
 from django.db import connection
 from django import template
-
+from daraz.checkout.checkout import  editBillingAdress
 register = template.Library()
 # from django.conf import settings
 # from django.core.cache import cache
@@ -250,19 +250,19 @@ def list_jobs(request):
 
 
 def profile(request):
-    username = None
+    email = None
     try:
-        username = request.session['username']
+        email = request.session['email']
     except:
         print('in profile and not found username')
         return redirect('/home/login')
     print("i m in profile")
 
-    sql = "select CUSTOMER_NAME, EMAIL, CONTACT,ADRESS, ZONE from PEOPLE where USERNAME = %s"
+    sql = "select CUSTOMER_NAME, EMAIL, CONTACT,ADRESS, ZONE,BILLING_ADDRESS from PEOPLE where EMAIL = %s"
     result = None
     try:
             cur = connection.cursor()
-            cur.execute(sql,[username])
+            cur.execute(sql,[email])
             result = cur.fetchall()
             cur.close()
     except:
@@ -275,28 +275,65 @@ def profile(request):
         contact = r[2]
         adress = r[3]
         zone = r[4]
+        baddress = r[5]
         print(adress)
-        dict_result = {'name':name,'zone':zone,'email':email,'contact':contact,'address':adress}
+        dict_result = {'name':name,'baddress':baddress,'zone':zone,'email':email,'contact':contact,'address':adress}
 
     return render(request,'profile1.html',{'details':dict_result})
 
+def addressbook(request):
+    mail = None
+    try:
+         mail = request.session['email']
+    except:
+        print('not logged in!')
+        return redirect('login')
+
+    if request.method == 'POST':
+        zone = request.POST.get('zone')
+        street = request.POST.get('street')
+        house = request.POST.get('house')
+        flat = request.POST.get('flat')
+        floor = request.POST.get('floor')
+        address = zone + ', '+street+', House : '+house+', Flat No: '+flat+', Floor No: '+floor+'.'
+
+        '''update address'''
+        try:
+            cur = connection.cursor()
+
+            cur.execute("update people set ADRESS =%s,ZONE=%s where EMAIL=%s",[address,zone,mail])
+            connection.commit()
+            cur.close()
+            print('address updated!')
+
+        except:
+            print('something went wrong!')
+            return render(request, 'adressbook.html')
+
+        return redirect('profile')
+
+    else:
+        return render(request,'adressbook.html')
 
 def accountsettings(request):
-    username = None
+    mail = None
     try:
-        username = request.session['username']
+        mail = request.session['email']
     except:
         print('in acc settings failed to get username')
         return redirect('/home/login')
     print("i m accountsettings")
-    print(username)
+
     if request.method == 'POST':
         print("reached!")
         cursor = connection.cursor()
         email = request.POST.get('email')
-        Address = request.POST.get('address')
+        # Address = request.POST.get('address')
         contact = request.POST.get('contact')
         name = request.POST.get('name')
+
+        if email == 'null':
+            email = mail
         try:
             img = request.FILES['pro_pic']
         except:
@@ -307,10 +344,10 @@ def accountsettings(request):
             user_folder = 'static/uploads/profile/'
             if not os.path.exists(user_folder):
                 os.mkdir(user_folder)
-            r = str(random.randrange(start=18792,step=1))
-            img_save_path =user_folder+'pro_pic'+username+r+img_extension
+            r = str(random.randrange(start=1788792,step=1))
+            img_save_path =user_folder+'pro_pic'+r+img_extension
             # img_save_path = user_folder + 'pro_pic'+img_extension
-            img_url = 'uploads/profile/'+'pro_pic'+ username+r+img_extension
+            img_url = 'uploads/profile/'+'pro_pic'+r+img_extension
             request.session['img_url'] = img_url
             with open(img_save_path, 'wb') as f:
                 for chunk in img.chunks():
@@ -319,8 +356,8 @@ def accountsettings(request):
         else:
             img_url = request.session['img_url']
 
-        sql = "UPDATE PEOPLE  SET CUSTOMER_NAME=%s, EMAIL = %s, ADRESS = %s , CONTACT= %s,CUSTOMER_PHOTO= %s WHERE USERNAME = %s"
-        cursor.execute(sql,[name,email,Address,contact,img_url,username])
+        sql = "UPDATE PEOPLE  SET CUSTOMER_NAME=%s, EMAIL = %s, CONTACT= %s,CUSTOMER_PHOTO= %s WHERE EMAIL = %s"
+        cursor.execute(sql,[name,email,contact,img_url,mail])
         connection.commit()
         cursor.close()
         request.session['name'] = name

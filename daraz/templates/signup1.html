@@ -9,10 +9,9 @@
             <div class="col-lg-6" >
                 <h2>Create your Daraz Account</h2>
             </div>
-            <div class="col-lg-3">
-                <h6>Already member? or </h6>
-
-            </div>
+             <div style="color: #ff5722" class="col-sm-10">
+                        <p style="color: #c43a25">{{ message}}</p>
+        		    </div>
            <div class="col-lg-3"style="padding-top:0px ">
 
               
@@ -70,62 +69,62 @@
                                 {% csrf_token %}
                                 <div class="form-group">
         	                    <label style="color: #34ce57" for="name">Full name*</label>
-        		                 <input type="text" class="form-control" id="name" name="name" placeholder=" Enter your First & Last name " >
+        		                 <input type="text" class="form-control" id="name" name="name" placeholder=" Enter your First & Last name " required >
         		               </div>
         					  <div class="form-group">
         					    <label style="color: #34ce57" class="control-label col-sm-6" for="mail">Email *</label>
         					    <div class="col-sm-10">
-        					      <input type="email" class="form-control" id="mail" name="mail" placeholder="Please enter your Email Adress">
+        					      <input type="email" class="form-control" id="mail" name="mail" placeholder="Please enter your Email Adress" required>
         					    </div>
         					  </div>
+{#                                <div class="form-group">#}
+{#        					    <label style="color: #34ce57" class="control-label col-sm-6" for="username">Username*</label>#}
+{#        					    <div class="col-sm-10">#}
+{#        					      <input type="text" class="form-control" id="username" name="username" placeholder="Please enter a valid Username" required>#}
+{#        					    </div>#}
+{#        					  </div>#}
                                 <div class="form-group">
-        					    <label style="color: #34ce57" class="control-label col-sm-6" for="username">Username*</label>
+                                 <label style="color: #34ce57" class="control-label col-sm-6" for="gender">Gender*</label>
         					    <div class="col-sm-10">
-        					      <input type="text" class="form-control" id="username" name="username" placeholder="Please enter a valid Username">
-        					    </div>
-        					  </div>
-                                <div class="form-group">
-                                 <label style="color: #34ce57" class="control-label col-sm-6" for="gender">Gender</label>
-        					    <div class="col-sm-10">
-        					      <input type="text" class="form-control" id="gender" name = "gender" placeholder="Male/Female/Other">
+        					      <input type="text" class="form-control" id="gender" name = "gender" placeholder="Male/Female/Other" required>
         					    </div>
         					  </div>
         					  <div class="form-group">
         					    <label style="color: #34ce57" class="control-label col-sm-6" for="password">Password*</label>
         					    <div class="col-sm-10">
-        					      <input type="Password" class="form-control" id="password" name = "password" placeholder="Minimum 6 characters with a number & a letter" >
+        					      <input type="Password" class="form-control" id="password" name = "password" placeholder="Minimum 6 characters with a number & a letter" required>
         					    </div>
         					  </div>
                                 <div class="form-group">
-                             <label style="color: #34ce57" class="control-label col-sm-6" for="birthdate">Date of Birth</label>
+                             <label style="color: #34ce57" class="control-label col-sm-6" for="birthdate">Date of Birth*</label>
         					    <div class="col-sm-10">
-        					      <input type="date" class="form-control" id="birthdate" name="birthdate" placeholder="DD-MONTH-YYYY">
+        					      <input type="date" class="form-control" id="birthdate" name="birthdate" placeholder="DD-MONTH-YYYY" required>
         					    </div>
         					  </div>
                               <div class="form-group">
-        					    <label style="color: #34ce57" class="control-label col-sm-6" for="adress">Adress*</label>
+        					    <label style="color: #34ce57" class="control-label col-sm-6" for="adress">Address*</label>
         					    <div class="col-sm-10">
-        					      <input type="text" class="form-control" id="adress" name = "adress" placeholder="Adress" >
+        					      <input type="text" class="form-control" id="adress" name = "adress" placeholder="Address" required>
         					    </div>
         					  </div>
                 		  <div class="form-group">
         					    <label style="color: #34ce57" class="control-label col-sm-6" for="zone">Zone*</label>
         					    <div class="col-sm-10">
-        					      <input type="text" class="form-control" id="zone" name = "zone" placeholder="Zone" >
+        					      <input type="text" class="form-control" id="zone" name = "zone" placeholder="Zone" required>
         					    </div>
         					  </div>
                 		  <div class="form-group">
-        					    <label style="color: #34ce57" class="control-label col-sm-6" for="contact">Mobile No.</label>
+        					    <label style="color: #34ce57" class="control-label col-sm-6" for="contact">Mobile No.(optional)</label>
         					    <div class="col-sm-10">
-        					      <input type="text" class="form-control" id="contact" name = "contact" placeholder="Contact" >
+        					      <input type="text" class="form-control" id="contact" name = "contact" placeholder="Contact" alt="017xxxxx">
         					    </div>
         					  </div>
-                		  <div class="form-group">
-        					    <label style="color: #34ce57" class="control-label col-sm-6" for="payment">Preferred Payment Method</label>
-        					    <div class="col-sm-10">
-        					      <input type="text" class="form-control" id="payment" name = "payment" placeholder="Bkash/Credit Card/Cash on Delivery" >
-        					    </div>
-        					  </div>
+{#                		  <div class="form-group">#}
+{#        					    <label style="color: #34ce57" class="control-label col-sm-6" for="payment">Preferred Payment Method(optional)</label>#}
+{#        					    <div class="col-sm-10">#}
+{#        					      <input type="text" class="form-control" id="payment" name = "payment" placeholder="Bkash/Credit Card/Cash on Delivery" alt="Bkash">#}
+{#        					    </div>#}
+{#        					  </div>#}
                                 <div class="signup_right">
 
                  <div class="col-sm-10">

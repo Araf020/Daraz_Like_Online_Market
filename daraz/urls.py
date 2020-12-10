@@ -19,6 +19,10 @@ urlpatterns = [
     path('home/', views.products, name='home'),
     # path('sell/',views.sell),
     path('home/logout/', loginOrSignup.user_logout, name='logout'),
+    path('home/forget_pass/', loginOrSignup.forgetPass, name='forget_pass'),
+    path('home/verify_mail/', loginOrSignup.verifymail, name='verify_mail'),
+    path('home/reset_pass/', loginOrSignup.resetpass, name='reset_pass'),
+
     path('home/sell/', views.sell, name='sell'),
     path('home/login/', loginOrSignup.user_login),
     path('home/sell/sellsignup/', sale.sellsignup),
@@ -34,7 +38,7 @@ urlpatterns = [
     path('login/profile/', views.profile),
     path('saleproduct/', sale.sale),
     # path('home/login/home/',loginOrSignup.user_login, name='login'),
-    path('home/profile/',views.profile),
+    path('home/profile/',views.profile, name='profile'),
     # path('home/order/',views.order, name = 'order'),
     path('home/cart/',views.cart,name = 'cart'),
 
@@ -55,5 +59,9 @@ urlpatterns = [
     path('home/place_your_order/',checkout.place_your_order , name = 'order_place'),
     path('home/order_confirmation/',checkout.order_confirmation, name = 'order_confirmation'),
     path('home/my_orders',ordertrack.orderlist, name = 'my_orders'),
+    path('home/profile/edit_address/',views.addressbook, name = 'edit_address'),
+    path('home/profile/edit_baddress/',views.editBillingAdress, name = 'edit_address'),
+
+
 
 ]

@@ -34,7 +34,7 @@
 			<div class="order-checking">
 				<h3>My Orders</h3>
 				<hr>
-				<p><a href="">My Orders</a></p>
+				<p><a href="/home/my_orders">My Orders</a></p>
 				<p><a href="">My Cancellations </a></p>
 			</div>
 			<hr>
@@ -68,25 +68,25 @@
                 <button class="btn" style="background-color: #2abbe8"><a  href="/home/profile/accountsettings"><h4 style="color: #0b2e13">Edit Profile</h4></a></button>
 				<p><a href="">{{ details.email }}</a></p>
                 <p><a href="">Address: {{ details.address }}</a></p>
-                <p><a href="">Zone: {{ details.zone }}</a></p>
+                <p><a style="color: #ff5722" href="">Zone: {{ details.zone }}</a></p>
                 <p><a href="">Contact: {{ details.contact }}</a></p>
 
 				<p><a href="#"></a></p>
 				
 			</div>
 			<div class="address-book col-lg-4" >
-				<h3>Address Book</h3><a href="">EDIT</a>
+				<h3>Address Book</h3><a style="background-color: #2abbe8;color: black" href="/home/profile/edit_address">EDIT</a>
 				<P>default shipping address</P>
-				<p>Arafat</p>
-				<P>LOCATION</P>
-				<p>01315167327</p>
+				<p>{{ details.name }}</p>
+				<P>{{ details.address }}</P>
+				<p style="font-family: 'Times New Roman';color: black">{{ details.contact }}</p>
 				
 			</div>
 			<div class="billing-address col-lg-4" >
-				<h3>Billing Address </h3><a href="">EDIT</a>
+				<h3>Billing Address </h3><a  style="background-color: #2abbe8;color: black" href="/home/profile/edit_baddress">EDIT</a>
 				<P>default billing address</P>
-				<p>Arafat</p>
-				<P>LOCATION</P>
+				<p>{{ request.session.name }}</p>
+				<P>{{ details.badddress }}</P>
 			
 				
 			</div >

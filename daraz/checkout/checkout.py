@@ -38,35 +38,40 @@ def makeorder(request, peopleid, orderdate,pay_status,method):
             orderid = random.randrange(start=id, step=1)
             shipmentid = random.randrange(start=orderid, step=1)
             cost = qty*getPrice(id)
-            cur.execute(sqlonOrder, [orderid, peopleid, orderdate, cost, qty, pay_status])
-            connection.commit()
-            push_on_product_orders(request,orderid)
-            push_on_payment(orderid, paymentid, 'True', method)
-            make_shipment(request, shipmentid, orderdate, orderid)
-            print('ordered!')
+            try:
+                cur.execute(sqlonOrder, [orderid, peopleid, orderdate, cost, qty, pay_status])
+                connection.commit()
+                push_on_product_orders(request, orderid)
+                push_on_payment(orderid, paymentid, 'True', method)
+                make_shipment(request, shipmentid, orderdate, orderid)
+            except:
+                print('this order is failed!')
+
+
+            print('this order is successful!')
         cur.close()
     except:
         print('order failed!')
         return redirect('cart')
 
-def push_on_product_orders(request,orderid):
-    cart = request.session.get('cart')
-    cartkeys = list(cart.keys())
-    print(cart)
-    cur = connection.cursor()
-    for product in cartkeys:
-        try:
-            qty = int(cart[product])
-            product = int(product)
-            # print(qty,end=' ')
-            cur.execute("INSERT INTO PRODUCT_ORDERS(ORDER_ID, PRODUCT_ID,QUANTITY) VALUES (%s,%s,%s)", [orderid, product,qty])
-            connection.commit()
-            print('success on pro_order')
-        except:
-            print('failed to push in product_orders table')
-    # print('pushed succesfully on product_orders')
-    cur.close()
-
+# def push_on_product_orders(request,orderid):
+#     cart = request.session.get('cart')
+#     cartkeys = list(cart.keys())
+#     print(cart)
+#     cur = connection.cursor()
+#     for product in cartkeys:
+#         try:
+#
+#             product = int(product)
+#             # print(qty,end=' ')
+#             cur.execute("INSERT INTO PRODUCT_ORDERS(ORDER_ID, PRODUCT_ID) VALUES (%s,%s)", [orderid, product])
+#             connection.commit()
+#             print('success on pro_order')
+#         except:
+#             print('failed to push in product_orders table')
+#     # print('pushed succesfully on product_orders')
+#     cur.close()
+#
 
 def push_on_product_orders(request, orderid):
     cart = request.session.get('cart')
@@ -74,16 +79,16 @@ def push_on_product_orders(request, orderid):
     print(cart)
     cur = connection.cursor()
     for product in cartkeys:
-        try:
+
             qty = int(cart[product])
             product = int(product)
             # print(qty,end=' ')
-            cur.execute("INSERT INTO PRODUCT_ORDERS(ORDER_ID, PRODUCT_ID,QUANTITY) VALUES (%s,%s,%s)",
-                        [orderid, product, qty])
+            cur.execute("INSERT INTO PRODUCT_ORDERS(ORDER_ID, PRODUCT_ID) VALUES (%s,%s)",
+                        [orderid, product])
             connection.commit()
             print('success on pro_order')
-        except:
-            print('failed to push in product_orders table')
+        # except:
+        #     print('failed to push in product_orders table')
     # print('pushed succesfully on product_orders')
     cur.close()
 
@@ -293,10 +298,11 @@ def credit_check(request):
         return redirect('/home/login')
     try:
         cart = request.session.get('cart')
+        key = list(cart.keys())
 
     except:
         return redirect('homepage')
-    if len(cart) == 0:
+    if len(key) == 0:
         return redirect('homepage')
     if request.method == 'POST':
         nameoncard = request.POST.get('cardname')
@@ -593,14 +599,14 @@ def getProductdic(request):
     return product_dic,total_count,total,package
 
 def editBillingAdress(request):
-    username = None
+    email = None
     try:
-        username = request.session['username']
+        email = request.session['email']
     except:
         print('in acc settings failed to get username')
         return redirect('/home/login')
     print("i m billing")
-    print(username)
+    # print(username)
     if request.method == 'POST':
         print("reached!")
         cursor = connection.cursor()
@@ -612,6 +618,12 @@ def editBillingAdress(request):
         flat = request.POST.get('flat')
         deliveryat = 'Name: '+ fname +'\n'+ 'Address: '+ address + '\n'+'Postcode: '+ postcode + '\n'+ flat + '\n'
         request.session['deliveryat'] = deliveryat
+
+        try:
+            cur = Initiate_Cursor()
+            cur.execute("Update people set BILLING_ADDRESS= %s where EMAIL=%s",[deliveryat,email])
+        except:
+            print('bill updated!')
         # try:
         #     img = request.FILES['pro_pic']
         # except:
@@ -641,7 +653,7 @@ def editBillingAdress(request):
         # request.session['name'] = name
 
         print('''it's done updating your info!''')
-        return redirect('place_your_order')
+        return redirect('order_place')
     else:
         return render(request, 'billingAdress.html', {})
 
