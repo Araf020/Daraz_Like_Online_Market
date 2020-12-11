@@ -558,10 +558,10 @@ def updateCart(request):
         img_url = request.POST.get('url')
         product_names = request.session.get('productList')
         product_name = request.POST.get('pro_name')
-        # if img_url:
-        #     print('img is not none')
-        # else:
-        #     img_url = pro_url.get(product)
+        if img_url:
+            print('img is not none')
+        else:
+            img_url = pro_url.get(product)
         # print('imgurl in update:' + str(img_url))
         # print('product_name: '+product_name)
         if cart:
