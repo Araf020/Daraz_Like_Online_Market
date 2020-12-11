@@ -45,7 +45,7 @@ urlpatterns = [
     path('home/pay_card/',checkout.credit_check, name= 'checkout'),
     # path('home/creditpay/',checkout.credit_check, name= 'checkout'),
     # path('home/place_your_order',views.products),
-    path('home/shipment/',checkout.shipment),
+    # path('home/shipment/',checkout.shipment),
     path('home/profile/accountsettings/',views.accountsettings),
     path('home/<int:catid>/',views.showCat_wise),
     path('home/track/',views.trackYourorder,name='track'),
@@ -63,6 +63,9 @@ urlpatterns = [
     path('home/my_orders',ordertrack.orderlist, name = 'my_orders'),
     path('home/profile/edit_address/',views.addressbook, name = 'edit_address'),
     path('home/profile/edit_baddress/',views.editBillingAdress, name = 'edit_address'),
+    path('home/shop/',sale.shop, name = 'shop'),
+    path('home/shop/orders/',sale.shoporderList, name = 'shop_orders'),
+    # path('home/shop/ship/',sale.shoporderList, name = 'shop_orders'),
 
 
 

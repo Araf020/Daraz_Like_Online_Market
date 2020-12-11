@@ -1,15 +1,11 @@
 from django.shortcuts import render, redirect
 import random
 from djangoProject6.settings import EMAIL_HOST_USER
-import os
-import hashlib
 from datetime import datetime
-from django.http import HttpResponse,HttpResponseRedirect
-from django.views import View
-# from .models import people
 from django.db import connection
 from django.core.mail import send_mail
-# from daraz.views import updateCart
+
+
 def getPrice(product):
     try:
         cur = connection.cursor()
@@ -22,7 +18,6 @@ def getPrice(product):
     return price
 
 def makeorder(request, peopleid, orderdate,pay_status,method):
-    sqlonOrder = "INSERT INTO ORDERS(ORDER_ID, CUSTOMER_ID, ORDER_DATE, AMOUNT, QUANTITY, PAYMENT_STATUS) VALUES (ORDERID.nextval,%s,%s,%s,%s,%s)"
     try:
         cart = request.session.get('cart')
     except:
@@ -39,17 +34,22 @@ def makeorder(request, peopleid, orderdate,pay_status,method):
     sub = 'Order Placed'
     try:
         cur = connection.cursor()
+        i =0
         # paymentid = random.randrange(start=320983092,step=1)
         for id in cartkeys:
             qty = cart[id]
+            producid = cartkeys[i]
+            i+=1
             id = int(id)
             # orderid = random.randrange(start=id, step=1)
             # shipmentid = random.randrange(start=orderid, step=1)
             cost = qty*getPrice(id)
             try:
+                sqlonOrder = "INSERT INTO ORDERS(ORDER_ID, CUSTOMER_ID, ORDER_DATE, AMOUNT, QUANTITY, PAYMENT_STATUS) VALUES (ORDERID.nextval,%s,%s,%s,%s,%s)"
+
                 cur.execute(sqlonOrder, [peopleid, orderdate, cost, qty, pay_status])
                 connection.commit()
-                push_on_product_orders(request)
+                push_on_product_orders(producid)
                 push_on_payment('True', method)
                 try:
                     sendMail(email,sub,msg)
@@ -67,39 +67,23 @@ def makeorder(request, peopleid, orderdate,pay_status,method):
         print('order failed!')
         return redirect('cart')
 
-# def push_on_product_orders(request,orderid):
-#     cart = request.session.get('cart')
-#     cartkeys = list(cart.keys())
-#     print(cart)
-#     cur = connection.cursor()
-#     for product in cartkeys:
-#         try:
-#
-#             product = int(product)
-#             # print(qty,end=' ')
-#             cur.execute("INSERT INTO PRODUCT_ORDERS(ORDER_ID, PRODUCT_ID) VALUES (%s,%s)", [orderid, product])
-#             connection.commit()
-#             print('success on pro_order')
-#         except:
-#             print('failed to push in product_orders table')
-#     # print('pushed succesfully on product_orders')
-#     cur.close()
-#
 
-def push_on_product_orders(request):
-    cart = request.session.get('cart')
-    cartkeys = list(cart.keys())
-    print(cart)
-    cur = connection.cursor()
-    for product in cartkeys:
+def push_on_product_orders(product):
 
-            qty = int(cart[product])
-            product = int(product)
-            # print(qty,end=' ')
-            cur.execute("INSERT INTO PRODUCT_ORDERS(ORDER_ID, PRODUCT_ID) VALUES (ORDERID.currval,%s)",
-                        [product])
-            connection.commit()
-            print('success on pro_order')
+    # print(cart)
+    try:
+        cur = connection.cursor()
+        product = int(product)
+        # print(qty,end=' ')
+        cur.execute("INSERT INTO PRODUCT_ORDERS(ORDER_ID, PRODUCT_ID) VALUES (ORDERID.currval,%s)",
+                    [product])
+        connection.commit()
+        print('success on pro_order')
+    except:
+        return redirect('order_place')
+
+
+
         # except:
         #     print('failed to push in product_orders table')
     # print('pushed succesfully on product_orders')
@@ -425,137 +409,9 @@ def credit_check(request):
     else:
        return render(request,'check1.html',{})
 
-
-def make_shipment(request,shipmentid,date,orderid):
-    sqlonsHipment = "INSERT INTO SHIPMENTS(SHIPMENT_ID, SHIPMENT_DATE, ORDER_ID, STATUS, DELIVERYAT) VALUES (%s,%s,%s,%s,%s)"
-
-    try:
-        # deliveryat = request.session['deliveryat']
-        # if deliveryat is None:
-        try:
-            deliveryat  = request.session['deliveryat']
-        except:
-            deliveryat = request.session['address']
-        cur = Initiate_Cursor()
-        cur.execute(sqlonsHipment, [shipmentid, date, orderid, 'False', deliveryat])
-        connection.commit()
-        cur.close()
-    except:
-    # except:
-        print("failed to push!")
-
-def shipment(request):
-
-    try:
-        custid = int(get_customer_id(request.session['email']))
-        customername = request.session['name']
-    except:
-        return redirect('login')
-    cur = connection.cursor()
-    orderList= {}
-    try:
-        i =0
-        cur.execute("select ORDER_ID from ORDERS where CUSTOMER_ID = %s",[custid])
-        res = cur.fetchone()
-        for r in res:
-
-            orderList[i] = r
-            i+=1
-    except:
-        print('no orders found!')
-        return redirect('homepage')
-    # orderList = list(orderList)
-    print(orderList)
-    orderkeys = orderList.keys()
-    for key in orderkeys:
-        sql = "SELECT * FROM SHIPMENTS where ORDER_ID=%s"
-        order = orderList[key]
-        print(order)
-        order = int(order)
-        cur.execute(sql,[order])
-        result = cur.fetchall()
-        d = []
-        for r in result:
-            shipid = r[0]
-            shipdate = r[1]
-            orderid = r[2]
-            status = r[3]
-            deliveryat = r[4]
-            # print(shipid)
-            # cur.execute("select CUSTOMER_ID from ORDERS where ORDER_ID =%s", [orderid])
-            # res = cur.fetchall()
-
-            # for r1 in res:
-            #     custid = r1[0]
-            # print(custid)
-            # cur.execute("select CUSTOMER_NAME from PEOPLE where CUSTOMER_ID=%s",[custid])
-            # result2 = cur.fetchall()
-            # for r2 in result2:
-            #     customername = r2[0]
-            row = {'id': custid, 'name': customername, 'address': deliveryat, 'orderid': orderid, 'shipdate': shipdate}
-            d.append(row)
-    cur.close()
-    print(d)
-    return render(request,'shipment.html',{'ship':d})
-
-
 def place_your_order(request):
     print("i m in orderplace!")
-    # try:
-    #     keys = None
-    #     car = request.session.get('cart')
-    #     if car:
-    #         keys = list(car.keys())
-    #         pro_url = request.session.get('pro_url')
-    #         prokeys = list(pro_url.keys())
-    #     else:
-    #         return redirect('homepage')
-    # except:
-    #     return redirect('/home')
-    # # keys = cart.keys()
-    # # print(keys)
-    # print(car)
-    # # print('prourl:'+ str(pro_url))
-    #
-    # print(pro_url)
-    # # print(car['2001'])
-    # product_dic = []
-    # total = 0
-    # total_count = 0
-    # cur = connection.cursor()
-    # for id in keys:
-    #     if id != 'null':
-    #         id = int(id)
-    #         print(id)
-    #         cur.execute("select PRODUCT_NAME,PRICE,DESCRIPTION,SHOP_ID from PRODUCTS where PRODUCT_ID=%s", [id])
-    #         result = cur.fetchone()
-    #         name = result[0]
-    #         price = result[1]
-    #         desc = result[2]
-    #         shop_id = result[3]
-    #         shopname  = 'Myshop'
-    #         try:
-    #             cur.execute("select SHOP_NAME from SHOPS where SHOP_ID =%s",[shop_id])
-    #             r1 = cur.fetchone()
-    #             shopname = r1[0]
-    #         except:
-    #             print('no shop related to this!')
-    #         try:
-    #             photo_url = pro_url[str(id)]
-    #             print('photo:' + photo_url)
-    #         except:
-    #             photo_url = 'uploads/products/product.jpg'
-    #             print('photo: ' + photo_url)
-    #
-    #         quantity = int(car[str(id)])
-    #         total += quantity * price
-    #         total_count += quantity
-    #         request.session['total'] = total
-    #
-    #         row = {'name': name,'shop':shopname, 'price': price, 'product_img': photo_url, 'specs': desc, 'id': id,
-    #                'quantity': quantity, 'price_total': quantity * price}
-    #         product_dic.append(row)
-    # cur.close()
+
     try:
         product_dic,total_count,total,package = getProductdic(request)
     except:
@@ -565,6 +421,7 @@ def place_your_order(request):
     request.session['pack'] = package
 
     return render(request,'placeorder.html',{'products':product_dic, 'total_count':total_count,'total':total,'after_fee': total + 69*package,'fee':65*package})
+
 
 
 def getProductdic(request):
@@ -588,10 +445,7 @@ def getProductdic(request):
     # keys = cart.keys()
     # print(keys)
     print(car)
-    # print('prourl:'+ str(pro_url))
 
-    # print(pro_url)
-    # print(car['2001'])
     product_dic = []
     total = 0
     total_count = 0

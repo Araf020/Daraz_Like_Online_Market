@@ -86,6 +86,8 @@ def getProductBy_customer_id(request,customerid):
             cur.execute("select PRODUCT_ID from PRODUCT_ORDERS where ORDER_ID=%s",[id])
             r = cur.fetchone()
             pro_id = r[0]
+            print('product id: ', end=' ')
+            print(pro_id)
             # except:
             #     pro_id = 0000
             try:

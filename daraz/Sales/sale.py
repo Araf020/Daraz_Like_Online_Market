@@ -48,6 +48,7 @@ def selllogin(request):
             print('success to login')
             print("success")
             request.session['shopusername'] = username
+            request.session['shopid'] = dbid
             request.session['shopname'] = shopname
             request.session['shopstatus'] = True
             # return render(request,'saleProducts.html',{})
@@ -279,3 +280,109 @@ def sale(request):
     else:
         return render(request,'saleProducts.html',{'name':shopn})
 
+def get_productby_shop(request,shopid):
+    cur = connection.cursor()
+    cur.execute("select PRODUCT_NAME,PRICE,DISCOUNT,QUANTITY,BRAND,DESCRIPTION,PRODUCT_ID,PRODUCT_PHOTO from PRODUCTS where SHOP_ID = %s",[shopid])
+    result = cur.fetchall()
+    product_dic = []
+    for  r in result:
+        name = r[0]
+        price = r[1]
+        dc = r[2]
+        quantity =r[3]
+        brand =r[4]
+        desc =r[5]
+        pro_id = r[6]
+        photo = r[7]
+        price = str(f"{price:,}")
+        row = {'id':pro_id,'name':name,'quantity':quantity,'brand':brand,'price':price,'dc':dc,'specs':desc,'photo':photo}
+        product_dic.append(row)
+
+    return product_dic
+
+def get_sold_productby_shop(shopid):
+    cur = connection.cursor()
+    cur.execute("select PRODUCT_NAME,PRICE,DISCOUNT,QUANTITY,BRAND,DESCRIPTION,PRODUCT_ID,PRODUCT_PHOTO from PRODUCTS where SHOP_ID = %s",[shopid])
+    result = cur.fetchall()
+    product_dic = []
+    for r in result:
+        name = r[0]
+        price = r[1]
+        dc = r[2]
+        quantity =r[3]
+        brand =r[4]
+        desc =r[5]
+        pro_id = r[6]
+        photo = r[7]
+        sprice = str(f"{price:,}")
+        # c = price*quantity
+        row = {'id':pro_id,'name':name,'cost':price,'quantity':quantity,'brand':brand,'price':sprice,'dc':dc,'specs':desc,'photo':photo}
+        product_dic.append(row)
+    order_list = []
+    for product in product_dic:
+        id = product['id']
+        print(id)
+        try:
+            cur = connection.cursor()
+            cur.execute("select ORDER_ID from PRODUCT_ORDERS where PRODUCT_ID = %s",[id])
+            res = cur.fetchone()
+            orderid = res[0]
+            print(orderid)
+            cur.execute("select SHIPMENT_DATE ,SHIPMENT_ID from SHIPMENTS where ORDER_ID=%s",[orderid])
+            res1 = cur.fetchone()
+            shipdate = res1[0]
+            shipid = res1[1]
+            cur.execute("select QUANTITY from ORDERS where ORDER_ID = %s",[orderid])
+            res2 = cur.fetchone()
+            count = res2[0]
+            product_name = product['name']
+            product_photo = product['photo']
+            cost = count*product['cost']
+            cost = str(f"{cost:,}")
+            order_row = {'id':id,'cost':cost,'shipid':shipid,'quantity':count,'shipdate':shipdate,'name':product_name,'photo':product_photo}
+            order_list.append(order_row)
+        except:
+            return order_list
+
+    return order_list
+
+
+def shop(request):
+    try:
+       shopid= request.session['shopid']
+
+    except:
+        return redirect('/home/sell')
+    product_dic = get_productby_shop(request,shopid)
+    return render(request,'shop.html',{'products':product_dic})
+
+
+def shoporderList(request):
+    try:
+       shopid= request.session['shopid']
+
+    except:
+        return redirect('/home/sell')
+    if request.method == 'POST':
+        shipid  = request.POST.get('shipid')
+        print(shipid)
+        cur = connection.cursor()
+        try:
+            cur.execute("Update SHIPMENTS set STATUS = 'True' where SHIPMENT_ID = %s",[shipid])
+            cur.execute("select order_id from SHIPMENTS where SHIPMENT_ID=%s",[shipid])
+            result = cur.fetchone()
+            orderid = result[0]
+            cur.execute("delete from ORDERS where ORDER_ID = %s",[orderid])
+        #
+
+            cur.close()
+        except:
+            return redirect('shop')
+        return redirect('shop_orders')
+
+    # try:
+    else:
+        orders = get_sold_productby_shop(shopid)
+        # except:
+        #     return redirect('shop')
+        return render(request,'shoporders.html',{'orders':orders})
