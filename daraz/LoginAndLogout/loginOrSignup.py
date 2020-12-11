@@ -2,13 +2,8 @@ from django.shortcuts import render, redirect
 import random
 import os
 import hashlib
-import datetime
-from django.http import HttpResponse,HttpResponseRedirect
-from django.views import View
-# from .models import people
 from django.db import connection
 from daraz.checkout.checkout import sendMail
-from django import template
 
 
 def user_login(request):
@@ -109,11 +104,11 @@ def user_login(request):
                     print(dbkey)
                     print("userkey: ")
                     print(new_key)
-                    return redirect('/home')
+                    return render(request, 'login.html', {'msg': messages})
 
             else:
                 print("wrong email!")
-                return redirect('/login')
+                return render(request, 'login.html', {'msg': messages})
         except:
             messages = "invalid email or password"
             print(messages)
@@ -288,7 +283,7 @@ def resetpass(request):
             print('pass mismatched')
             return render(request,'resetpass.html',{'msg':'Password mismatched!'})
 
-        request.session.clear()
+        # request.session.clear()
         request.session['otp'] = 0
 
         return redirect('login')
