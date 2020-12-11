@@ -53,6 +53,12 @@ def user_login(request):
             print(dbsalt)
             dbkey = dbsaltedpass[32:]
             print(dbkey)
+
+            if baddress:
+                print(baddress)
+            else:
+                baddress = address
+
             img = 'uploads/products/10000069-2_28-fresho-capsicum-green.jpg'
             try:
                 img = result[4]
@@ -86,6 +92,8 @@ def user_login(request):
                     request.session['name'] = name
                     request.session['email'] = email
                     request.session['address'] = address
+                    request.session['deliveryat'] = baddress
+                    # request.session['delivaryat'] = baddress
                     request.session['zone'] = zone
                     request.session['contact'] = contact
                     # request.session['id'] = dbuser

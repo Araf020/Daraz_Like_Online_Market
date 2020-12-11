@@ -57,7 +57,8 @@ urlpatterns = [
 
     # path('home/pay_card/',checkout.credit_check, name = 'credit'),
     path('home/place_your_order/',checkout.place_your_order , name = 'order_place'),
-    path('home/order_confirmation/',checkout.order_confirmation, name = 'order_confirmation'),
+    path('home/buy/',views.buy, name = 'buy'),
+    # path('home/order_confirmation/',checkout.order_confirmation, name = 'order_confirmation'),
     path('home/my_orders',ordertrack.orderlist, name = 'my_orders'),
     path('home/profile/edit_address/',views.addressbook, name = 'edit_address'),
     path('home/profile/edit_baddress/',views.editBillingAdress, name = 'edit_address'),

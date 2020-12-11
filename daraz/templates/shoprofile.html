@@ -1,9 +1,7 @@
-{% extends 'base.html' %}
+{% extends 'shopbase.html' %}
 {% load static %}
 {% block content %}
 
-{% load cart %}
-{% load custom_filter %}
 
 
 <div style="color: black;" class="container-fluid mt-3">
@@ -13,16 +11,17 @@
 		<div class=" profile-left col-lg-2">
 
 
-			<p class="name">Hello, {{ request.session.name }}</p>
+			<p class="name">Hello,Arafat Hossain</p>
 			<hr>
 
 
 		    <div style="font-family: Helvetica Neue, Helvetica, Tahoma, Arial, Microsoft YaHei, PingFang SC" class="personal-info ">
-				<p><h3>Manage My Shop</h3></p>
+				<p><h3>Manage My Account</h3></p>
 				<hr>
-				<p><a href="">My Products</a></p>
-				<p><a href="">My Sales </a></p>
-
+				<p><a href="">My Profile</a></p>
+				<p><a href="">My Address Book</a></p>
+				<p><a href="">My Payment Options</a></p>
+				<p><a href="">Vouchers</a></p>
 
 			</div>
 			
@@ -37,13 +36,13 @@
 				<p><a href="">My Cancellations </a></p>
 			</div>
 			<hr>
-
-
+			
+			
             <p>My Reviews</p>
             <hr>
             <p>My Wishlists and My Followed Stores</p>
             <hr>
-            <p href="/home/sell">Sell on Daraz</p>
+            <p>Sell on Daraz</p>
 
             
            
@@ -56,7 +55,7 @@
 
 
 	<div class="profile-right col-lg-10">
-		<h1>Manage My Shop</h1>
+		<h1>Manage My Account</h1>
 
 		<div class="row">
 			<div class="personal-profile col-lg-4">
@@ -74,18 +73,18 @@
 				
 			</div>
 			<div class="address-book col-lg-4" >
-				<h2 style="background-color: black;color: white;width: 100px">Address Book</h2><a style="background-color: #2abbe8;color: black" href="/home/profile/edit_address">EDIT</a>
+				<h3>Address Book</h3><a style="background-color: #2abbe8;color: black" href="/home/profile/edit_address">EDIT</a>
 				<P>default shipping address</P>
 				<p>{{ details.name }}</p>
-				<P style="font-family: Arial;color: #ff5722;font-size: larger" >{{ details.address }}</P>
+				<P>{{ details.address }}</P>
 				<p style="font-family: 'Times New Roman';color: black">{{ details.contact }}</p>
 				
 			</div>
 			<div class="billing-address col-lg-4" >
-				<h2 style="background-color: black;color: white;width: 100px">Billing Address </h2><a  style="background-color: #2abbe8;color: black" href="/home/profile/edit_baddress">EDIT</a>
+				<h3>Billing Address </h3><a  style="background-color: #2abbe8;color: black" href="/home/profile/edit_baddress">EDIT</a>
 				<P>default billing address</P>
 				<p>{{ request.session.name }}</p>
-				<P style="font-family: Arial;font-size: larger;color: #ff5722">{{ request.session.deliveryat }}</P>
+				<P>{{ details.badddress }}</P>
 			
 				
 			</div >

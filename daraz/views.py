@@ -18,7 +18,14 @@ register = template.Library()
 
 class Index(View):
     def post(self , request):
-        updateCart(request)
+        choice = request.POST.get('c')
+        print('choice:'+choice)
+        if choice == 'add':
+            updateCart(request)
+        elif choice=='buy':
+            updateCart(request)
+            print('cart', request.session['cart'])
+            return redirect('order_place')
         print('cart', request.session['cart'])
         return redirect('homepage')
 
@@ -551,10 +558,10 @@ def updateCart(request):
         img_url = request.POST.get('url')
         product_names = request.session.get('productList')
         product_name = request.POST.get('pro_name')
-        if img_url:
-            print('img is not none')
-        else:
-            img_url = pro_url.get(product)
+        # if img_url:
+        #     print('img is not none')
+        # else:
+        #     img_url = pro_url.get(product)
         # print('imgurl in update:' + str(img_url))
         # print('product_name: '+product_name)
         if cart:
@@ -668,6 +675,12 @@ def paymentChoice(request):
     else:
 
         return render(request,'selection.html',{})
+
+def buy(request):
+
+    print('i m in viewsbuy..')
+    updateCart(request)
+    return redirect('order_place')
 
 def test(request):
     return  render(request,'orderlist.html',{})

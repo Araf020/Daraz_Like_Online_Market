@@ -30,7 +30,7 @@
 {# 	</section>#}
 </div>
 </nav>
-<div class="container-fluid mt-3">
+<div style="color: black" class="container-fluid mt-3">
 	<div class="row">
 
 
@@ -39,7 +39,7 @@
 
 
 		<div class="col-lg-2 mx-auto">
-			<div class="list-group">
+			<div style="font-family: 'Arial Black';color: black" class="list-group">
 
                 <button style="background-color: #2abbe8" class="btn btn-white dropdown-toggle" type="button" data-toggle="dropdown"><h4 style="color: #0b2e13">Catagories</h4></button>
 
@@ -62,8 +62,8 @@
 
                     <div class="card-body">
 						<p class="card-title">{{product.name}}</p>
-                        <p class="card-title">Discount: {{product.discount}}%</p>
-						<p class="card-text"><b>{{product.price|currency}}</b></p>
+                        <p style="color: #ff5722" class="card-title">Discount: {{product.discount}}%</p>
+						<p style="font-family: 'Arial Black'" class="card-text"><b style="font-family: 'Arial Black'">{{product.price|currency}}</b></p>
 {#						<p class="card-text"><b>{{product.desc}}</b></p>#}
 {#						<!-- {{product | is_in_cart:request.session.cart }} -->#}
 					</div>

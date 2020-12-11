@@ -4,7 +4,7 @@ import os
 import hashlib
 import datetime
 from django.http import HttpResponse,HttpResponseRedirect
-from django.views import View
+from daraz.LoginAndLogout.loginOrSignup import encrypt_pass
 # from .models import people
 from django.db import connection
 from django import template
@@ -18,27 +18,55 @@ def selllogin(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        sql = "select SHOP_NAME, SHOP_ID from SHOPS where SHOPPASSWORD = %s"
+        try:
+            sql = "select SHOP_NAME, SHOP_ID,SHOPKEY from SHOPS where SHOP_USERNAME = %s"
+        except:
+            print('shop does not exist!')
+            return redirect('/home/sell/sellLogin')
+
         cur = connection.cursor()
-        cur.execute(sql,[password])
+        cur.execute(sql,[username])
         result = cur.fetchall()
         shopname =None
         cur.close()
         dbid =None
+        dbsaltkey = None
         for r in result:
             dbid = r[1]
             shopname = r[0]
-        print(dbid)
-        if dbid is not None:
+            dbsaltkey = r[2]
+        dbsalt = dbsaltkey[:32]
+        dbkey = dbsaltkey[32:]
+        new_key = hashlib.pbkdf2_hmac(
+            'sha256',  # The hash digest algorithm for HMAC
+            password.encode('utf-8'),
+            dbsalt,
+            100000,  # 100,000 iterations of SHA-256
+            # dklen = 128
+        )
+        if dbkey == new_key:
+            print('success to login')
             print("success")
             request.session['shopusername'] = username
             request.session['shopname'] = shopname
             request.session['shopstatus'] = True
             # return render(request,'saleProducts.html',{})
             return redirect('/saleproduct')
+            # return redirect('/saleLogin')
         else:
-            print("failed bitch!")
-            return redirect('/saleLogin')
+            return render(request, 'sellingLogin.html', {'msg': 'inavlid username or password'})
+
+
+        # if dbid is not None:
+        #     print("success")
+        #     request.session['shopusername'] = username
+        #     request.session['shopname'] = shopname
+        #     request.session['shopstatus'] = True
+        #     # return render(request,'saleProducts.html',{})
+        #     return redirect('/saleproduct')
+        # else:
+        #     print("failed bitch!")
+        #     return redirect('/saleLogin')
     else:
         return render(request,'sellingLogin.html',{})
 
@@ -52,10 +80,15 @@ def sellsignup(request):
         shopname = request.POST.get('name')
         shopcat = request.POST.get('cat')
         contact = request.POST.get('contact')
-        sql = "INSERT INTO SHOPS(SHOP_ID, SHOP_NAME, ZONE, CONTACT_INFO, SHOPPASSWORD, SHOP_CAT, SHOP_USERNAME) VALUES (%s,%s,%s,%s,%s,%s,%s);"
+        sql = "INSERT INTO SHOPS(SHOP_ID, SHOP_NAME, ZONE, CONTACT_INFO, SHOPKEY, SHOP_CAT, SHOP_USERNAME) VALUES (SHOPID.nextval,%s,%s,%s,%s,%s,%s);"
         cur = connection.cursor()
-        cur.execute(sql, [shopid, shopname, zone, contact, pwd, shopcat, username])
-        connection.commit()
+        salt,key = encrypt_pass(pwd)
+        saltedpass = salt+key
+        try:
+            cur.execute(sql, [shopname, zone, contact, saltedpass, shopcat, username])
+            connection.commit()
+        except:
+            return render(request, 'sellsignup.html',{'msg':'something went wrong!'})
         cur.close()
         return redirect('/home/sell/saleLogin')
         # return redirect('saleLogin/')
@@ -178,10 +211,10 @@ def sale(request):
                         if catid is None:
                             print(cat)
                             print('i m in cat found')
-                            catid = random.randrange(start=id, step=1)
-                            sql = "INSERT INTO CATAGORIES(CAT_ID, CAT_NAME, QUANTITY) VALUES (%s,%s,%s)"
+                            # catid = random.randrange(start=id, step=1)
+                            sql = "INSERT INTO CATAGORIES(CAT_ID, CAT_NAME, QUANTITY) VALUES (CATATAGORYID.nextval,%s,%s)"
                             cur = connection.cursor()
-                            cur.execute(sql,[catid,cat,quantity])
+                            cur.execute(sql,[cat,quantity])
                             connection.commit()
                             cur.close()
                         else:
@@ -198,7 +231,7 @@ def sale(request):
                             connection.commit()
                             cur.close()
 
-                        sql = "UPDATE PEOPLE SET USERNAME = %s , EMAIL = %s, ADRESS = %s , CONTACT= %s,CUSTOMER_PHOTO= %s WHERE CUSTOMER_ID = %s"
+                        # sql = "UPDATE PEOPLE SET USERNAME = %s , EMAIL = %s, ADRESS = %s , CONTACT= %s,CUSTOMER_PHOTO= %s WHERE CUSTOMER_ID = %s"
                         # cursor.execute(sql, [username, email, Address, contact, img_url, dbid])
 
                         cur = connection.cursor()
@@ -215,7 +248,7 @@ def sale(request):
 
                         # shopname = shopname[0]
 
-                        sqlforshopid = "SELECT SHOP_ID FROM SHOPS WHERE SHOP_NAME = %s"
+                        # sqlforshopid = "SELECT SHOP_ID FROM SHOPS WHERE SHOP_NAME = %s"
                         # try:
                             # cur.execute(sqlforshopid, [shopname])
 
@@ -227,11 +260,11 @@ def sale(request):
                         print("db_shop_id: " + str(shopid))
                         # sql = "INSERT INTO CATAGORIES(CAT_ID, CAT_NAME, QUANTITY) VALUES (%s,%s,%s)"
 
-                        sql1 = "INSERT INTO PRODUCTS(PRODUCT_ID,BRAND, PRODUCT_NAME, PRODUCT_PHOTO, DISCOUNT, CAT_ID,STATUS, PRICE, QUANTITY, DESCRIPTION, SHOP_ID) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                        sql1 = "INSERT INTO PRODUCTS(PRODUCT_ID,BRAND, PRODUCT_NAME, PRODUCT_PHOTO, DISCOUNT, CAT_ID,STATUS, PRICE, QUANTITY, DESCRIPTION, SHOP_ID) VALUES (PRODUCTID.nextval,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
                         cur = connection.cursor()
                         # cur.execute(sql, [catid, cat, quantity])
                         cur.execute(sql1,
-                                    [id, brand, name, img_url, discount, catid, 'Available', price, quantity, specs,
+                                    [brand, name, img_url, discount, catid, 'Available', price, quantity, specs,
                                      shopid])
                         connection.commit()
                         cur.close()

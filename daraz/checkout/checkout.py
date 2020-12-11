@@ -9,7 +9,7 @@ from django.views import View
 # from .models import people
 from django.db import connection
 from django.core.mail import send_mail
-
+# from daraz.views import updateCart
 def getPrice(product):
     try:
         cur = connection.cursor()
@@ -22,7 +22,7 @@ def getPrice(product):
     return price
 
 def makeorder(request, peopleid, orderdate,pay_status,method):
-    sqlonOrder = "INSERT INTO ORDERS(ORDER_ID, CUSTOMER_ID, ORDER_DATE, AMOUNT, QUANTITY, PAYMENT_STATUS) VALUES (%s,%s,%s,%s,%s,%s)"
+    sqlonOrder = "INSERT INTO ORDERS(ORDER_ID, CUSTOMER_ID, ORDER_DATE, AMOUNT, QUANTITY, PAYMENT_STATUS) VALUES (ORDERID.nextval,%s,%s,%s,%s,%s)"
     try:
         cart = request.session.get('cart')
     except:
@@ -31,19 +31,19 @@ def makeorder(request, peopleid, orderdate,pay_status,method):
     cartkeys = list(cart.keys())
     try:
         cur = connection.cursor()
-        paymentid = random.randrange(start=320983092,step=1)
+        # paymentid = random.randrange(start=320983092,step=1)
         for id in cartkeys:
             qty = cart[id]
             id = int(id)
-            orderid = random.randrange(start=id, step=1)
-            shipmentid = random.randrange(start=orderid, step=1)
+            # orderid = random.randrange(start=id, step=1)
+            # shipmentid = random.randrange(start=orderid, step=1)
             cost = qty*getPrice(id)
             try:
-                cur.execute(sqlonOrder, [orderid, peopleid, orderdate, cost, qty, pay_status])
+                cur.execute(sqlonOrder, [peopleid, orderdate, cost, qty, pay_status])
                 connection.commit()
-                push_on_product_orders(request, orderid)
-                push_on_payment(orderid, paymentid, 'True', method)
-                make_shipment(request, shipmentid, orderdate, orderid)
+                push_on_product_orders(request)
+                push_on_payment('True', method)
+                # make_shipment(request, orderdate, orderid)
             except:
                 print('this order is failed!')
 
@@ -73,7 +73,7 @@ def makeorder(request, peopleid, orderdate,pay_status,method):
 #     cur.close()
 #
 
-def push_on_product_orders(request, orderid):
+def push_on_product_orders(request):
     cart = request.session.get('cart')
     cartkeys = list(cart.keys())
     print(cart)
@@ -83,8 +83,8 @@ def push_on_product_orders(request, orderid):
             qty = int(cart[product])
             product = int(product)
             # print(qty,end=' ')
-            cur.execute("INSERT INTO PRODUCT_ORDERS(ORDER_ID, PRODUCT_ID) VALUES (%s,%s)",
-                        [orderid, product])
+            cur.execute("INSERT INTO PRODUCT_ORDERS(ORDER_ID, PRODUCT_ID) VALUES (ORDERID.currval,%s)",
+                        [product])
             connection.commit()
             print('success on pro_order')
         # except:
@@ -205,12 +205,12 @@ def get_items(request):
     return items
 
 
-def push_on_payment(orderid,paymentid,paymentstatus,method):
-    sqlonPayment = "INSERT INTO PAYMENTS(PAYMENT_ID, ORDER_ID, PAYMENT_STATUS, METHOD) VALUES (%s,%s,%s,%s)"
+def push_on_payment(paymentstatus,method):
+    sqlonPayment = "INSERT INTO PAYMENTS(PAYMENT_ID, ORDER_ID, PAYMENT_STATUS, METHOD) VALUES (PAYMENTID.nextval,ORDERID.currval,%s,%s)"
     # paymentstatus = 'True'
     try:
         cur = connection.cursor()
-        cur.execute(sqlonPayment, [paymentid, orderid, paymentstatus, method])
+        cur.execute(sqlonPayment, [paymentstatus, method])
         connection.commit()
         cur.close()
     except:
@@ -474,7 +474,7 @@ def shipment(request):
 
 
 def place_your_order(request):
-    print("i m n try")
+    print("i m in orderplace!")
     # try:
     #     keys = None
     #     car = request.session.get('cart')
@@ -530,7 +530,10 @@ def place_your_order(request):
     #                'quantity': quantity, 'price_total': quantity * price}
     #         product_dic.append(row)
     # cur.close()
-    product_dic, total_count, total,package = getProductdic(request)
+    try:
+        product_dic,total_count,total,package = getProductdic(request)
+    except:
+        return redirect('homepage')
     print(product_dic,total_count,total)
     request.session['qty'] = total_count
     request.session['pack'] = package
@@ -539,11 +542,14 @@ def place_your_order(request):
 
 
 def getProductdic(request):
+    print('i m in getproductdic')
     try:
         keys = None
         car = request.session.get('cart')
         if car:
             keys = list(car.keys())
+            if(len(keys))==0:
+                return redirect('homepage')
             package = len(keys)
             pro_url = request.session.get('pro_url')
             prokeys = list(pro_url.keys())
@@ -551,12 +557,14 @@ def getProductdic(request):
             return redirect('homepage')
     except:
         return redirect('/home')
+    if (len(keys)) == 0:
+        return redirect('homepage')
     # keys = cart.keys()
     # print(keys)
     print(car)
     # print('prourl:'+ str(pro_url))
 
-    print(pro_url)
+    # print(pro_url)
     # print(car['2001'])
     product_dic = []
     total = 0
@@ -565,7 +573,7 @@ def getProductdic(request):
     for id in keys:
         if id != 'null':
             id = int(id)
-            print(id)
+            # print(id)
             cur.execute("select PRODUCT_NAME,PRICE,DESCRIPTION,SHOP_ID from PRODUCTS where PRODUCT_ID=%s", [id])
             result = cur.fetchone()
             name = result[0]
@@ -581,10 +589,10 @@ def getProductdic(request):
                 print('no shop related to this!')
             try:
                 photo_url = pro_url[str(id)]
-                print('photo:' + photo_url)
+                # print('photo:' + photo_url)
             except:
                 photo_url = 'uploads/products/product.jpg'
-                print('photo: ' + photo_url)
+                # print('photo: ' + photo_url)
 
             quantity = int(car[str(id)])
             total += quantity * price
@@ -595,7 +603,7 @@ def getProductdic(request):
                    'quantity': quantity, 'price_total': quantity * price}
             product_dic.append(row)
     cur.close()
-
+    print(product_dic,total,total_count,package)
     return product_dic,total_count,total,package
 
 def editBillingAdress(request):
@@ -616,7 +624,7 @@ def editBillingAdress(request):
         postcode = request.POST.get('zip')
         city = request.POST.get('city')
         flat = request.POST.get('flat')
-        deliveryat = 'Name: '+ fname +'\n'+ 'Address: '+ address + '\n'+'Postcode: '+ postcode + '\n'+ flat + '\n'
+        deliveryat = 'Name: '+ fname +'\ncontact: ' + str(phone)+ '\nAddress: '+ address + ', '+city + '.' +'\nPostcode: '+ postcode + '\nRoom/Flat: ' +flat + '\n'
         request.session['deliveryat'] = deliveryat
 
         try:
@@ -657,54 +665,41 @@ def editBillingAdress(request):
     else:
         return render(request, 'billingAdress.html', {})
 
-def bkash(acc,otp,paymentid,pin):
-    return 'hi'
 
-def pay_bkash(request,paymentid):
-    try:
-        email = request.session['email']
-    except:
-        print('log in to pay')
-        return redirect('login')
-    if request.method == 'POST':
-        otp = random.randrange(start=135792,step=1)
-        try:
-            bkashno = request.POST.get('accno')
-            request.session['bkash'] = True
-        except:
-            print('failed to catch your baksh acc')
-            return redirect('bkash')
-        if bkashno:
-            try:
-                v_c = request.POST.get('vc')
-            except:
-                return redirect('bkash')
-            pin = None
-            if v_c:
-                try:
-                    pin = request.POST.get('pin')
-                except:
-                    pin = 0
-                    return ('bkash')
-            else:
-                return redirect('pay_bkash')
-            bkash(bkashno,otp,paymentid,pin)
-
-
-
-        return redirect('confirm_order')
-    else:
-        return  render(request,'bkash.html',{})
-
-
-def pay_card(request):
-    return render(request,'check1.html',{})
-
-def pay_cash(request):
-    return render(request,'confirmation.html',{})
-def order_confirmation(request):
-    return render(request,'order_confirmation.html',{})
-
+# def pay_bkash(request,paymentid):
+#     try:
+#         email = request.session['email']
+#     except:
+#         print('log in to pay')
+#         return redirect('login')
+#     if request.method == 'POST':
+#         otp = random.randrange(start=135792,step=1)
+#         try:
+#             bkashno = request.POST.get('accno')
+#             request.session['bkash'] = True
+#         except:
+#             print('failed to catch your baksh acc')
+#             return redirect('bkash')
+#         if bkashno:
+#             try:
+#                 v_c = request.POST.get('vc')
+#             except:
+#                 return redirect('bkash')
+#             pin = None
+#             if v_c:
+#                 try:
+#                     pin = request.POST.get('pin')
+#                 except:
+#                     pin = 0
+#                     return ('bkash')
+#             else:
+#                 return redirect('pay_bkash')
+#             # bkash(bkashno,otp,paymentid,pin)
+#
+#         return redirect('confirm_order')
+#     else:
+#         return  render(request,'bkash.html',{})
+#
 
 def Initiate_Cursor():
     cursor = connection.cursor()
@@ -719,55 +714,4 @@ def sendMail(email,subject,msg):
         [email],
         fail_silently=False,
     )
-def emptyCart(request):
-    request.session.delete('cart')
-    request.session.delete('productList')
-    request.session.delete('total')
 
-# class Payment(View):
-#     paymentid = None
-#     orderid = None
-#
-#     def __init__(self):
-#        paymentid = random.randrange(start=135290,step=1)
-#        orderid = random.randrange(start=38292432, step=1)
-#
-#     def pay_bkash(self,request):
-#         try:
-#             email = request.session['email']
-#         except:
-#             print('log in to pay')
-#             return redirect('login')
-#         if request.method == 'POST':
-#             otp = random.randrange(start=135792, step=1)
-#             try:
-#                 bkashno = request.POST.get('accno')
-#                 request.session['bkash'] = True
-#             except:
-#                 print('failed to catch your baksh acc')
-#                 return redirect('bkash')
-#             if bkashno:
-#                 try:
-#                     v_c = request.POST.get('vc')
-#                 except:
-#                     return redirect('bkash')
-#                 pin = None
-#                 if v_c:
-#                     try:
-#                         pin = request.POST.get('pin')
-#                     except:
-#                         pin = 0
-#                         return ('bkash')
-#
-#                 else:
-#                     return redirect('pay_bkash')
-#
-#         else:
-#             return render(request,'bkash.html',{})
-#
-#     def pay_card(self,request):
-#         return  render(request,'check1.html',{})
-#
-#     def pay_cash(self,request):
-#         return redirect('order_confirmation')
-#
