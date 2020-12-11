@@ -126,7 +126,7 @@ def signup(request):
     print("i m in signup")
     usr=None
     try:
-        usr = request.session['username']
+        email = request.session['email']
         user_logout(request)
     except:
         print("sign up please!")
@@ -166,10 +166,10 @@ def signup(request):
         # )
         saltedpass = salt+key
         # sql = "INSERT INTO PEOPLE(CUSTOMER_ID, CUSTOMER_NAME, USERNAME,GENDER, BIRTHDATE, KEY, ADRESS, CONTACT, ZONE, EMAIL, PAYMENT_METHOD,SALT) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-        sql = "INSERT INTO PEOPLE(CUSTOMER_ID, CUSTOMER_NAME,GENDER, BIRTHDATE, KEY, ADRESS, CONTACT, ZONE, EMAIL ,ROLE) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        sql = "INSERT INTO PEOPLE(CUSTOMER_ID, CUSTOMER_NAME,GENDER, BIRTHDATE, KEY, ADRESS, CONTACT, ZONE, EMAIL ,ROLE) VALUES (CATATAGORYID.nextval,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
         try:
             cursor = connection.cursor()
-            cursor.execute(sql, [id, name, gender, dob, saltedpass, adress, contact, zone, email, 'customer'])
+            cursor.execute(sql, [name, gender, dob, saltedpass, adress, contact, zone, email, 'customer'])
             connection.commit()
             cursor.close()
             sendMail(email, sub, msg)
