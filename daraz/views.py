@@ -43,8 +43,8 @@ def products(request):
     if request.method == "POST":
         print('i m in POST')
 
-        orderid = random.randrange(start=100000, step=1)
-        print("orderid: "+ str(orderid))
+        # orderid = random.randrange(start=100000, step=1)
+        # print("orderid: "+ str(orderid))
         # choice = request.POST.get('choose')
         # print(choice,end=' ')
         # print("!")
@@ -98,25 +98,25 @@ def products(request):
             print("customerid: " + str(customerid))
             date = datetime.now().strftime("%D:%H:%M:%S")  # .strftime("%d/%m/%Y")
             print("date:" + str(date))
-            if productid is not None:
-                try:
-
-                    cur.execute(
-                        "INSERT INTO ORDERS(order_id, customer_id, order_date, amount, quantity, payment_status, items) VALUES (%s,%s,%s,%s,%s,%s,%s)",
-                        [orderid, customerid, date, price, quantity, status, List])
-                    connection.commit()
-                    cur.execute("INSERT INTO PRODUCT_ORDERS(ORDER_ID, PRODUCT_ID) VALUES (%s,%s)", [orderid, productid])
-                    connection.commit()
-                    cur.close()
-                    print('order success!')
-                except:
-                    print('could not make the order!')
-                    return redirect('/home')
-                # return render(request, 'cart.html', {'user': name})
-                # print("ki hsse vai!")
-                return redirect('/home')
-            else:
-                return redirect('homepage')
+            # if productid is not None:
+            #     try:
+            #
+            #         cur.execute(
+            #             "INSERT INTO ORDERS(order_id, customer_id, order_date, amount, quantity, payment_status) VALUES (%s,%s,%s,%s,%s,%s)",
+            #             [orderid, customerid, date, price, quantity, status])
+            #         connection.commit()
+            #         cur.execute("INSERT INTO PRODUCT_ORDERS(ORDER_ID, PRODUCT_ID) VALUES (%s,%s)", [orderid, productid])
+            #         connection.commit()
+            #         cur.close()
+            #         print('order success!')
+            #     except:
+            #         print('could not make the order!')
+            #         return redirect('/home')
+            #     # return render(request, 'cart.html', {'user': name})
+            #     # print("ki hsse vai!")
+            #     return redirect('/home')
+            # else:
+            return redirect('homepage')
         except:
                 print('log in plz!')
                 return redirect('/home/login')
@@ -312,6 +312,7 @@ def addressbook(request):
             connection.commit()
             cur.close()
             print('address updated!')
+            request.session['address'] = address
 
         except:
             print('something went wrong!')

@@ -52,6 +52,7 @@ urlpatterns = [
     path('home/payment/',views.paymentChoice, name='payment_choice'),
     path('test/',views.test),
     path('home/pay_bkash/',checkout.bkash_check, name = 'bkash'),
+    path('home/cash_on_delivery/',checkout.cash_on_delivery, name = 'cash_on_delivery'),
     path('home/verify_bkash/',checkout.verify_bkash, name = 'v_b'),
     path('home/confirm_bkash_pay/',checkout.verify_pin, name = 'v_p'),
 

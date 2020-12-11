@@ -82,12 +82,12 @@ def getProductBy_customer_id(request,customerid):
 
             id = int(id)
             print(id)
-            try:
-                cur.execute("select PRODUCT_ID from PRODUCT_ORDERS where ORDER_ID=%s",[id])
-                r = cur.fetchone()
-                pro_id = r[0]
-            except:
-                pro_id = 0000
+            # try:
+            cur.execute("select PRODUCT_ID from PRODUCT_ORDERS where ORDER_ID=%s",[id])
+            r = cur.fetchone()
+            pro_id = r[0]
+            # except:
+            #     pro_id = 0000
             try:
                 cur.execute("select  ORDER_DATE,QUANTITY from ORDERS where ORDER_ID = %s",[id])
                 r = cur.fetchone()
@@ -97,6 +97,7 @@ def getProductBy_customer_id(request,customerid):
                 return redirect('homepage')
             # print(pro_id)
             try:
+
                 cur.execute("select  PRODUCT_NAME,PRICE,DESCRIPTION,SHOP_ID, PRODUCT_PHOTO from PRODUCTS where PRODUCT_ID=%s" , [pro_id])
                 result = cur.fetchone()
                 # print(result)
@@ -130,6 +131,7 @@ def getProductBy_customer_id(request,customerid):
 
             row = {'orderid':id,'orderdate':orderdate,'name': name,'shop':shopname, 'price': price, 'product_img': photo_url, 'specs': desc, 'id': id,
                    'quantity': quantity, 'price_total': quantity * price}
+            print(row)
             product_dic.append(row)
     cur.close()
 

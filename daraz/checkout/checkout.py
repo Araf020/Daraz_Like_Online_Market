@@ -29,6 +29,13 @@ def makeorder(request, peopleid, orderdate,pay_status,method):
         print('cart is empty')
         return redirect('place_your_order')
     cartkeys = list(cart.keys())
+    name = request.session['name']
+    email  = request.session['email']
+    items = get_items(request)
+    msg = 'Hello, ' + name + '\nYour Order has Been Placed SuccessFully.\n' + 'We will reach you to reconfirm very soon!\n' + 'You Have ' + str(
+        request.session['pack']) + ' packages in process to recieve' + '\nYour orders: \n' + str(
+        items) + '\nTotal cost: BDT ' + str(request.session['total'] + 65 * request.session['pack']) + '\n'
+    sub = 'Order Placed'
     try:
         cur = connection.cursor()
         # paymentid = random.randrange(start=320983092,step=1)
@@ -43,6 +50,11 @@ def makeorder(request, peopleid, orderdate,pay_status,method):
                 connection.commit()
                 push_on_product_orders(request)
                 push_on_payment('True', method)
+                try:
+                    sendMail(email,sub,msg)
+                except:
+                    print('msg sending failed')
+                    return redirect('order_place')
                 # make_shipment(request, orderdate, orderid)
             except:
                 print('this order is failed!')
@@ -151,10 +163,10 @@ def verify_pin(request):
                 request.session['pack']) +' packages in process to recieve' +'\nYour orders: \n' + str(
                 items) + '\nTotal cost: BDT '+str(request.session['total'] + 65*request.session['pack'])+'\n'
             sub = 'Order Placed'
-            try:
-                sendMail(email, sub, msg)
-            except:
-                print('failed to send mail!')
+            # try:
+            #     sendMail(email, sub, msg)
+            # except:
+            #     print('failed to send mail!')
 
             request.session['cart'] = {}
             request.session['productList'] = {}
@@ -170,18 +182,24 @@ def verify_pin(request):
 def verify_bkash(request):
     if request.method == 'POST':
         vc = request.POST.get('vc')
+
+
         acc = request.session['phone']
         cur = connection.cursor()
         cur.execute("select otp from BKASH where ACCNO=%s",[acc])
         result = cur.fetchone()
         otp = result[0]
         # pin = result[1]
-        if int(vc) == otp:
-            print('verified')
-            return redirect('v_p')
+        if vc:
+            if int(vc) == otp:
+                print('verified')
+                return redirect('v_p')
+            else:
+                return render(request, 'bkashverification.html', {})
+
         else:
             print('failed!')
-            return redirect('vc_b')
+            return render(request,'bkashverification.html',{})
     else:
         print('verifying')
         return render(request,'bkashverification.html',{})
@@ -261,9 +279,16 @@ def bkash_check(request):
         print(phoneNo)
         cur = connection.cursor()
         try:
+            cur.execute("select ACCNO from BKASH where ACCNO = %s",[phoneNo])
+            res = cur.fetchone()
+            dbacc = res[0]
+            if dbacc:
 
-            cur.execute("UPDATE BKASH set OTP = %s where ACCNO=%s", [otp, phoneNo])
-            connection.commit()
+                cur.execute("UPDATE BKASH set OTP = %s where ACCNO=%s", [otp, phoneNo])
+                connection.commit()
+            else:
+                return render(request, 'bkash.html',
+                              {'msg:': "This account Doesn't exist!\nPlease Open an account through Bkash App"})
             request.session['acc'] = True
 
         except:
@@ -387,10 +412,10 @@ def credit_check(request):
             request.session['pack']) + ' packages in process to recieve' + '\nYour orders: \n' + str(
             items) + '\nTotal cost: BDT ' + str(request.session['total'] + 65*request.session['pack']) + '\n'
         sub = 'Order Placed'
-        try:
-            sendMail(email, sub, msg)
-        except:
-            print('failed to send mail!')
+        # try:
+        #     sendMail(email, sub, msg)
+        # except:
+        #     print('failed to send mail!')
 
         request.session['cart'] = {}
         request.session['productList'] = {}
@@ -639,6 +664,30 @@ def editBillingAdress(request):
         return render(request, 'billingAdress.html', {})
 
 
+def cash_on_delivery(request):
+    try:
+        email = request.session['email']
+        print(email)
+    except:
+        return redirect('login')
+    peopleid = get_customer_id(email)
+    orderdate = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    method = 'cash_on_delivery'
+    try:
+        makeorder(request, peopleid, orderdate, 'False', method)
+
+    except:
+        return redirect('cart')
+    name = request.session['name']
+    items = get_items(request)
+
+
+
+
+    '''empty the cart and redirect to orderList'''
+    request.session['cart'] = {}
+    request.session['productList'] = {}
+    return redirect('my_orders')
 # def pay_bkash(request,paymentid):
 #     try:
 #         email = request.session['email']
