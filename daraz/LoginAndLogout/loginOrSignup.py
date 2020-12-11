@@ -220,15 +220,22 @@ def forgetPass(request):
             cur = connection.cursor()
             try:
                 cur.execute("select email from PEOPLE where EMAIL=%s", [mail])
+                eres = cur.fetchone()
+                mail = eres[0]
             except:
                 print('email not found!')
                 return render(request, 'forfetpass.html', {'msg': 'No account related to this email!'})
+            if mail:
+                print('mail found!')
+            else:
+                return render(request, 'forfetpass.html', {'msg': 'No account related to this email!'})
+
             try:
                 sendMail(mail, sub, message)
             except:
                 return render(request, 'forfetpass.html', {'msg': 'invalid mail!'})
             cur.close()
-            request.session['email'] = mail
+            request.session['mail'] = mail
             request.session['otp'] = otp
             return redirect('verify_mail')
         else:
@@ -267,7 +274,7 @@ def resetpass(request):
         newpass = request.POST.get('newpass')
         repass = request.POST.get('repass')
         if newpass == repass:
-            email = request.session['email']
+            email = request.session['mail']
             salt,key = encrypt_pass(newpass)
             saltedpass = salt+key
             cur = connection.cursor()
@@ -281,7 +288,7 @@ def resetpass(request):
             print('pass mismatched')
             return render(request,'resetpass.html',{'msg':'Password mismatched!'})
 
-        request.session['email'] = None
+        request.session.clear()
         request.session['otp'] = 0
 
         return redirect('login')
