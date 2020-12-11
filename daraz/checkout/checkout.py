@@ -34,7 +34,8 @@ def makeorder(request, peopleid, orderdate,pay_status,method):
     items = get_items(request)
     msg = 'Hello, ' + name + '\nYour Order has Been Placed SuccessFully.\n' + 'We will reach you to reconfirm very soon!\n' + 'You Have ' + str(
         request.session['pack']) + ' packages in process to recieve' + '\nYour orders: \n' + str(
-        items) + '\nTotal cost: BDT ' + str(request.session['total'] + 65 * request.session['pack']) + '\n'
+        items) + '\nTotal cost: BDT ' + str(f"{request.session['total']+65 * request.session['pack']:,}")+ '\n'
+            #+str(request.session['total'] + 65 * request.session['pack'])
     sub = 'Order Placed'
     try:
         cur = connection.cursor()
