@@ -166,7 +166,7 @@ def signup(request):
         # )
         saltedpass = salt+key
         # sql = "INSERT INTO PEOPLE(CUSTOMER_ID, CUSTOMER_NAME, USERNAME,GENDER, BIRTHDATE, KEY, ADRESS, CONTACT, ZONE, EMAIL, PAYMENT_METHOD,SALT) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-        sql = "INSERT INTO PEOPLE(CUSTOMER_ID, CUSTOMER_NAME,GENDER, BIRTHDATE, KEY, ADRESS, CONTACT, ZONE, EMAIL ,ROLE) VALUES (CATATAGORYID.nextval,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        sql = "INSERT INTO PEOPLE(CUSTOMER_ID, CUSTOMER_NAME,GENDER, BIRTHDATE, KEY, ADRESS, CONTACT, ZONE, EMAIL ,ROLE) VALUES (PEOPLEID.nextval,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
         try:
             cursor = connection.cursor()
             cursor.execute(sql, [name, gender, dob, saltedpass, adress, contact, zone, email, 'customer'])
