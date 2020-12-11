@@ -45,12 +45,12 @@ def user_login(request):
             pid = result[8]
             baddress = result[9]
             dbsalt = dbsaltedpass[:32]
-            print(dbsalt)
+            print(address)
             dbkey = dbsaltedpass[32:]
             print(dbkey)
 
             if baddress:
-                print(baddress)
+                print('badd:' + baddress)
             else:
                 baddress = address
 
@@ -104,10 +104,12 @@ def user_login(request):
                     print(dbkey)
                     print("userkey: ")
                     print(new_key)
+                    messages = "invalid email or password"
                     return render(request, 'login.html', {'msg': messages})
 
             else:
                 print("wrong email!")
+                messages = "invalid email or password"
                 return render(request, 'login.html', {'msg': messages})
         except:
             messages = "invalid email or password"
@@ -183,6 +185,12 @@ def user_logout(request):
             # del request.session['name']
             request.session.delete('username')
             request.session.delete('name')
+            request.session.delete('email')
+            request.session.delete('address')
+            request.session.delete('deliveryat')
+
+            request.session.delete('img_url')
+
             # request.session.clear()
             print("logged out")
             # user = request.session['username']

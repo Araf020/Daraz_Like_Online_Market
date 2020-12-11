@@ -631,34 +631,7 @@ def editBillingAdress(request):
             cur = Initiate_Cursor()
             cur.execute("Update people set BILLING_ADDRESS= %s where EMAIL=%s",[deliveryat,email])
         except:
-            print('bill updated!')
-        # try:
-        #     img = request.FILES['pro_pic']
-        # except:
-        #     img = None
-        # if img:
-        #     img_extension = os.path.splitext(img.name)[1]
-        #
-        #     user_folder = 'static/uploads/profile/'
-        #     if not os.path.exists(user_folder):
-        #         os.mkdir(user_folder)
-        #     r = str(random.randrange(start=18792, step=1))
-        #     img_save_path = user_folder + 'pro_pic' + username + r + img_extension
-        #     # img_save_path = user_folder + 'pro_pic'+img_extension
-        #     img_url = 'uploads/profile/' + 'pro_pic' + username + r + img_extension
-        #     request.session['img_url'] = img_url
-        #     with open(img_save_path, 'wb') as f:
-        #         for chunk in img.chunks():
-        #             f.write(chunk)
-        #
-        # else:
-        #     img_url = request.session['img_url']
-        #
-        # sql = "UPDATE PEOPLE  SET CUSTOMER_NAME=%s, EMAIL = %s, ADRESS = %s , CONTACT= %s,CUSTOMER_PHOTO= %s WHERE USERNAME = %s"
-        # cursor.execute(sql, [name, email, Address, contact, img_url, username])
-        # connection.commit()
-        # cursor.close()
-        # request.session['name'] = name
+            print('bill not updated!')
 
         print('''it's done updating your info!''')
         return redirect('order_place')

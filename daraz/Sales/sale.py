@@ -82,8 +82,10 @@ def sellsignup(request):
         contact = request.POST.get('contact')
         sql = "INSERT INTO SHOPS(SHOP_ID, SHOP_NAME, ZONE, CONTACT_INFO, SHOPKEY, SHOP_CAT, SHOP_USERNAME) VALUES (SHOPID.nextval,%s,%s,%s,%s,%s,%s);"
         cur = connection.cursor()
+
         salt,key = encrypt_pass(pwd)
         saltedpass = salt+key
+        print(saltedpass)
         try:
             cur.execute(sql, [shopname, zone, contact, saltedpass, shopcat, username])
             connection.commit()
